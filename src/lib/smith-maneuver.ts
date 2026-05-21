@@ -23,6 +23,36 @@ export type SmithManeuverResult = {
   yearlySnapshots: YearlySnapshot[];
 };
 
+export type CapitalizingSmithManeuverInputs = {
+  homeValue: number;
+  appreciationRate: number;
+  mortgageBalance: number;
+  mortgageRate: number;
+  amortizationYears: number;
+  helocRate: number;
+  investmentReturn: number;
+  marginalTaxRate: number;
+  years: number;
+};
+
+export type CapitalizingYearlySnapshot = {
+  year: number;
+  homeValue: number;
+  mortgageBalance: number;
+  helocBalance: number;
+  marginAccountValue: number;
+  rrspValue: number;
+  netEquity: number;
+};
+
+export type CapitalizingSmithManeuverResult = {
+  helocBalance: number;
+  marginAccountValue: number;
+  rrspValue: number;
+  netEquity: number;
+  yearlySnapshots: CapitalizingYearlySnapshot[];
+};
+
 function fixedMonthlyPayment(principal: number, annualRate: number, months: number): number {
   const r = annualRate / 12;
   if (r === 0) return principal / months;
@@ -60,21 +90,17 @@ export function calculateSmithManeuver(inputs: SmithManeuverInputs): SmithManeuv
   const maxMonths = amortizationYears * 12 + 12;
 
   while (mortgage > 0.01 && month < maxMonths) {
-    // Split mortgage payment into interest and principal
     const mortgageInterest = mortgage * r;
     const principalPaid = Math.min(payment - mortgageInterest, mortgage);
     mortgage = Math.max(mortgage - principalPaid, 0);
 
-    // Reborrow principal as HELOC and invest it immediately (beginning-of-month contribution)
     heloc += principalPaid;
     portfolio = (portfolio + principalPaid) * (1 + ri);
 
-    // Accrue HELOC interest for annual refund calculation
     helocInterestAccrued += heloc * (helocRate / 12);
 
     month++;
 
-    // Each year: receive tax refund on HELOC interest, apply as mortgage prepayment
     if (month % 12 === 0 && mortgage > 0.01) {
       const refund = helocInterestAccrued * marginalTaxRate;
       totalTaxSavings += refund;
@@ -96,6 +122,82 @@ export function calculateSmithManeuver(inputs: SmithManeuverInputs): SmithManeuv
     totalTaxSavings,
     monthsToPayoff: month,
     baselineMonthsToPayoff: baselineMonths(mortgageBalance, mortgageRate, amortizationYears),
+    yearlySnapshots,
+  };
+}
+
+export function calculateCapitalizingSmithManeuver(
+  inputs: CapitalizingSmithManeuverInputs
+): CapitalizingSmithManeuverResult {
+  const {
+    homeValue: initialHomeValue,
+    appreciationRate,
+    mortgageBalance: initialMortgageBalance,
+    mortgageRate,
+    amortizationYears,
+    helocRate,
+    investmentReturn,
+    marginalTaxRate,
+    years,
+  } = inputs;
+
+  const r = mortgageRate / 12;
+  const payment = fixedMonthlyPayment(initialMortgageBalance, mortgageRate, amortizationYears * 12);
+
+  const initialHelocCap = Math.max(
+    Math.min(0.8 * initialHomeValue - initialMortgageBalance, 0.65 * initialHomeValue),
+    0
+  );
+
+  let mortgage = initialMortgageBalance;
+  let helocBalance = initialHelocCap;
+  let marginAccount = initialHelocCap;
+  let rrsp = 0;
+  const yearlySnapshots: CapitalizingYearlySnapshot[] = [];
+
+  for (let year = 1; year <= years; year++) {
+    // Amortize mortgage for 12 months
+    for (let m = 0; m < 12; m++) {
+      if (mortgage > 0.01) {
+        const interest = mortgage * r;
+        const principal = Math.min(payment - interest, mortgage);
+        mortgage = Math.max(mortgage - principal, 0);
+      }
+    }
+
+    const homeValue = initialHomeValue * Math.pow(1 + appreciationRate, year);
+    const helocCap = Math.max(Math.min(0.8 * homeValue - mortgage, 0.65 * homeValue), 0);
+
+    // Capitalize HELOC interest (capped at HELOC limit)
+    const helocInterest = helocBalance * helocRate;
+    helocBalance = Math.min(helocBalance + helocInterest, helocCap);
+
+    // Draw remaining new room and invest
+    const newRoom = Math.max(helocCap - helocBalance, 0);
+    marginAccount += newRoom;
+    helocBalance = helocCap;
+
+    marginAccount = marginAccount * (1 + investmentReturn);
+
+    const taxRefund = helocInterest * marginalTaxRate;
+    rrsp = rrsp * (1 + investmentReturn) + taxRefund;
+
+    yearlySnapshots.push({
+      year,
+      homeValue,
+      mortgageBalance: mortgage,
+      helocBalance,
+      marginAccountValue: marginAccount,
+      rrspValue: rrsp,
+      netEquity: marginAccount + rrsp - helocBalance,
+    });
+  }
+
+  return {
+    helocBalance,
+    marginAccountValue: marginAccount,
+    rrspValue: rrsp,
+    netEquity: marginAccount + rrsp - helocBalance,
     yearlySnapshots,
   };
 }

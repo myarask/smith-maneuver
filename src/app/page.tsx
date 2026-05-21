@@ -4,67 +4,69 @@ import { useState, useMemo } from "react";
 import CalculatorForm from "@/components/CalculatorForm";
 import ResultsSummary from "@/components/ResultsSummary";
 import {
-  calculateSmithManeuver,
-  SmithManeuverInputs,
+  calculateCapitalizingSmithManeuver,
+  CapitalizingSmithManeuverInputs,
 } from "@/lib/smith-maneuver";
 
 export type FormState = {
   homeValue: string;
+  appreciationRate: string;
   mortgageBalance: string;
   mortgageRate: string;
   amortizationYears: string;
   helocRate: string;
   investmentReturn: string;
   marginalTaxRate: string;
+  timeHorizon: string;
 };
 
 const DEFAULTS: FormState = {
   homeValue: "700000",
+  appreciationRate: "3.0",
   mortgageBalance: "500000",
   mortgageRate: "5.5",
   amortizationYears: "25",
   helocRate: "7.2",
   investmentReturn: "10.0",
   marginalTaxRate: "43.0",
+  timeHorizon: "25",
 };
 
-function parseForm(form: FormState): SmithManeuverInputs | null {
+function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
+  const homeValue = parseFloat(form.homeValue);
+  const appreciationRate = parseFloat(form.appreciationRate) / 100;
   const mortgageBalance = parseFloat(form.mortgageBalance);
   const mortgageRate = parseFloat(form.mortgageRate) / 100;
   const amortizationYears = parseFloat(form.amortizationYears);
   const helocRate = parseFloat(form.helocRate) / 100;
   const investmentReturn = parseFloat(form.investmentReturn) / 100;
   const marginalTaxRate = parseFloat(form.marginalTaxRate) / 100;
+  const years = parseFloat(form.timeHorizon);
 
   if (
-    isNaN(mortgageBalance) ||
-    mortgageBalance <= 0 ||
-    isNaN(mortgageRate) ||
-    mortgageRate <= 0 ||
-    mortgageRate >= 1 ||
-    isNaN(amortizationYears) ||
-    amortizationYears < 1 ||
-    amortizationYears > 30 ||
-    isNaN(helocRate) ||
-    helocRate <= 0 ||
-    helocRate >= 1 ||
-    isNaN(investmentReturn) ||
-    investmentReturn <= 0 ||
-    investmentReturn >= 1 ||
-    isNaN(marginalTaxRate) ||
-    marginalTaxRate <= 0 ||
-    marginalTaxRate >= 1
+    isNaN(homeValue) || homeValue <= 0 ||
+    isNaN(appreciationRate) || appreciationRate < 0 || appreciationRate > 0.2 ||
+    isNaN(mortgageBalance) || mortgageBalance <= 0 ||
+    isNaN(mortgageRate) || mortgageRate <= 0 || mortgageRate >= 1 ||
+    isNaN(amortizationYears) || amortizationYears < 1 || amortizationYears > 30 ||
+    isNaN(helocRate) || helocRate <= 0 || helocRate >= 1 ||
+    isNaN(investmentReturn) || investmentReturn <= 0 || investmentReturn >= 1 ||
+    isNaN(marginalTaxRate) || marginalTaxRate <= 0 || marginalTaxRate >= 1 ||
+    isNaN(years) || years < 1 || years > 50
   ) {
     return null;
   }
 
   return {
+    homeValue,
+    appreciationRate,
     mortgageBalance,
     mortgageRate,
     amortizationYears,
     helocRate,
     investmentReturn,
     marginalTaxRate,
+    years,
   };
 }
 
@@ -73,7 +75,7 @@ export default function Home() {
 
   const results = useMemo(() => {
     const parsed = parseForm(form);
-    return parsed ? calculateSmithManeuver(parsed) : null;
+    return parsed ? calculateCapitalizingSmithManeuver(parsed) : null;
   }, [form]);
 
   function handleChange(key: keyof FormState, value: string) {

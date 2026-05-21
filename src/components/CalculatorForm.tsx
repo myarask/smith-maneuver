@@ -48,40 +48,15 @@ export default function CalculatorForm({ form, onChange }: Props) {
 
   return (
     <div className="flex flex-col gap-5">
-      {field(
-        "homeValue",
-        "Home appraised value",
-        "$",
-        undefined,
-        "700000",
-        "1",
-      )}
-      {field(
-        "mortgageBalance",
-        "Mortgage balance",
-        "$",
-        undefined,
-        "500000",
-        "1",
-      )}
+      {field("homeValue", "Home appraised value", "$", undefined, "700000", "1")}
+      {field("appreciationRate", "Home appreciation rate", undefined, "%", "3.0", "0.1")}
+      {field("mortgageBalance", "Mortgage balance", "$", undefined, "500000", "1")}
       {field("mortgageRate", "Mortgage interest rate", undefined, "%", "5.5")}
-      {field(
-        "amortizationYears",
-        "Amortization remaining",
-        undefined,
-        "years",
-        "25",
-        "1",
-      )}
+      {field("amortizationYears", "Amortization remaining", undefined, "years", "25", "1")}
       {field("helocRate", "HELOC interest rate", undefined, "%", "7.2")}
-      {field(
-        "investmentReturn",
-        "Expected annual return",
-        undefined,
-        "%",
-        "10.0",
-      )}
+      {field("investmentReturn", "Expected annual return", undefined, "%", "10.0")}
       {field("marginalTaxRate", "Marginal tax rate", undefined, "%", "43.0")}
+      {field("timeHorizon", "Time horizon", undefined, "years", "25", "1")}
     </div>
   );
 }

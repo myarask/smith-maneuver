@@ -1,18 +1,11 @@
-import { SmithManeuverResult } from "@/lib/smith-maneuver";
+import { CapitalizingSmithManeuverResult } from "@/lib/smith-maneuver";
 
 type Props = {
-  results: SmithManeuverResult | null;
+  results: CapitalizingSmithManeuverResult | null;
 };
 
 function formatDollars(n: number): string {
   return n.toLocaleString("en-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 });
-}
-
-function formatMonths(months: number): string {
-  const years = Math.floor(months / 12);
-  const rem = months % 12;
-  if (rem === 0) return `${years} yr`;
-  return `${years} yr ${rem} mo`;
 }
 
 type StatCardProps = {
@@ -37,35 +30,40 @@ export default function ResultsSummary({ results }: Props) {
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Results</h2>
         <div className="grid grid-cols-1 gap-3">
-          <StatCard label="Final portfolio" value="—" />
-          <StatCard label="Total tax refunds" value="—" />
-          <StatCard label="Time saved" value="—" />
+          <StatCard label="HELOC balance" value="—" />
+          <StatCard label="Margin account" value="—" />
+          <StatCard label="RRSP value" value="—" />
+          <StatCard label="Net equity" value="—" />
         </div>
       </div>
     );
   }
 
-  const { portfolioValue, totalTaxSavings, monthsToPayoff, baselineMonthsToPayoff } = results;
-  const monthsSaved = Math.max(baselineMonthsToPayoff - monthsToPayoff, 0);
+  const { helocBalance, marginAccountValue, rrspValue, netEquity } = results;
 
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Results</h2>
       <div className="grid grid-cols-1 gap-3">
         <StatCard
-          label="Final portfolio"
-          value={formatDollars(portfolioValue)}
-          sub={`at payoff (${formatMonths(monthsToPayoff)})`}
+          label="HELOC balance"
+          value={formatDollars(helocBalance)}
+          sub="outstanding liability"
         />
         <StatCard
-          label="Total tax refunds"
-          value={formatDollars(totalTaxSavings)}
-          sub="applied to mortgage"
+          label="Margin account"
+          value={formatDollars(marginAccountValue)}
+          sub="gross investment portfolio"
         />
         <StatCard
-          label="Time saved"
-          value={formatMonths(monthsSaved)}
-          sub={`vs. ${formatMonths(baselineMonthsToPayoff)} baseline`}
+          label="RRSP value"
+          value={formatDollars(rrspValue)}
+          sub="tax refunds compounded"
+        />
+        <StatCard
+          label="Net equity"
+          value={formatDollars(netEquity)}
+          sub="margin + RRSP − HELOC"
         />
       </div>
     </div>
