@@ -153,7 +153,17 @@ export function calculateCapitalizingSmithManeuver(
   let helocBalance = initialHelocCap;
   let marginAccount = initialHelocCap;
   let rrsp = 0;
-  const yearlySnapshots: CapitalizingYearlySnapshot[] = [];
+  const yearlySnapshots: CapitalizingYearlySnapshot[] = [
+    {
+      year: 0,
+      homeValue: initialHomeValue,
+      mortgageBalance: initialMortgageBalance,
+      helocBalance: initialHelocCap,
+      marginAccountValue: initialHelocCap,
+      rrspValue: 0,
+      netEquity: 0,
+    },
+  ];
 
   for (let year = 1; year <= years; year++) {
     // Amortize mortgage for 12 months
