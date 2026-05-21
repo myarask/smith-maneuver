@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import CalculatorForm from "@/components/CalculatorForm";
 import ResultsSummary from "@/components/ResultsSummary";
+import StatsFooter from "@/components/StatsFooter";
 import {
   calculateCapitalizingSmithManeuver,
   CapitalizingSmithManeuverInputs,
@@ -92,21 +93,24 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-zinc-50 dark:bg-zinc-950 px-4 py-10 gap-10">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-          Smith Maneuver
-        </h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Estimate the lifetime value of converting your mortgage into a
-          tax-deductible investment loan.
-        </p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-8 w-full max-w-6xl items-start">
-        <CalculatorForm form={form} onChange={handleChange} />
-        <div className="sticky top-8">
+    <main className="flex flex-col bg-zinc-50 dark:bg-zinc-950">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-10 px-4 py-10">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Smith Maneuver
+          </h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            Estimate the lifetime value of converting your mortgage into a
+            tax-deductible investment loan.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-8 w-full max-w-6xl items-start">
+          <CalculatorForm form={form} onChange={handleChange} />
           <ResultsSummary results={results} />
         </div>
+      </div>
+      <div className="w-full flex justify-center px-4 pb-16">
+        <StatsFooter results={results} />
       </div>
     </main>
   );
