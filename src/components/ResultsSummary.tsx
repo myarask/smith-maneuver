@@ -27,41 +27,6 @@ function StatCard({ label, value, sub, valueColor, accent }: StatCardProps) {
   );
 }
 
-const SIMULATION_BULLETS = [
-  {
-    heading: "HELOC draws",
-    body: "Each year, new HELOC room — created by mortgage paydown and home appreciation — is drawn up to the Canadian readvanceable limit (lesser of 65% of home value or 80% LTV combined).",
-  },
-  {
-    heading: "Investment",
-    body: "HELOC interest capitalizes onto the balance. Any remaining new room is invested in a margin account and grows at your expected annual return.",
-  },
-  {
-    heading: "Tax refund cascade",
-    body: "The HELOC interest expense generates a tax refund. That refund is contributed to your RRSP, which produces a second refund — both flow into your RRSP annually.",
-  },
-  {
-    heading: "RRSP compounding",
-    body: "RRSP contributions compound at the same return rate, converging to an annual total equal to the interest refund divided by (1 − your marginal rate).",
-  },
-];
-
-const descriptionBlock = (
-  <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
-    <ul className="flex flex-col gap-3">
-      {SIMULATION_BULLETS.map((b) => (
-        <li key={b.heading} className="flex gap-2 text-sm">
-          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-400 dark:bg-zinc-600" />
-          <span className="text-zinc-600 dark:text-zinc-400">
-            <span className="font-semibold text-zinc-800 dark:text-zinc-200">{b.heading}: </span>
-            {b.body}
-          </span>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
-
 export default function ResultsSummary({ results }: Props) {
   if (!results) {
     return (
@@ -71,7 +36,6 @@ export default function ResultsSummary({ results }: Props) {
           <div className="flex items-center justify-center h-70 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
             <p className="text-sm text-zinc-400 dark:text-zinc-500">Enter valid values to see chart</p>
           </div>
-          {descriptionBlock}
         </section>
         <section className="flex flex-col gap-3">
           <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Stats</h2>
@@ -101,7 +65,6 @@ export default function ResultsSummary({ results }: Props) {
         <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 pt-4 pr-2">
           <EquityChart snapshots={results.yearlySnapshots} />
         </div>
-        {descriptionBlock}
       </section>
       <section className="flex flex-col gap-3">
         <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Stats</h2>

@@ -31,7 +31,7 @@ function formatDollars(n: number): string {
 
 export default function EquityChart({ snapshots }: Props) {
   return (
-    <ResponsiveContainer width="100%" height={280}>
+    <ResponsiveContainer width="100%" height={340}>
       <ComposedChart data={snapshots} margin={{ top: 4, right: 4, left: 8, bottom: 16 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#d4d4d8" strokeOpacity={0.5} />
         <XAxis
