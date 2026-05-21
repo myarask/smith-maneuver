@@ -1,7 +1,7 @@
 import { SmithManeuverResult } from "@/lib/smith-maneuver";
 
 type Props = {
-  results: SmithManeuverResult;
+  results: SmithManeuverResult | null;
 };
 
 function formatDollars(n: number): string {
@@ -32,13 +32,26 @@ function StatCard({ label, value, sub }: StatCardProps) {
 }
 
 export default function ResultsSummary({ results }: Props) {
+  if (!results) {
+    return (
+      <div className="flex flex-col gap-4">
+        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Results</h2>
+        <div className="grid grid-cols-1 gap-3">
+          <StatCard label="Final portfolio" value="—" />
+          <StatCard label="Total tax refunds" value="—" />
+          <StatCard label="Time saved" value="—" />
+        </div>
+      </div>
+    );
+  }
+
   const { portfolioValue, totalTaxSavings, monthsToPayoff, baselineMonthsToPayoff } = results;
   const monthsSaved = Math.max(baselineMonthsToPayoff - monthsToPayoff, 0);
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-md">
+    <div className="flex flex-col gap-4">
       <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Results</h2>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3">
         <StatCard
           label="Final portfolio"
           value={formatDollars(portfolioValue)}
