@@ -37,13 +37,15 @@ export default function ResultsSummary({ results }: Props) {
           <StatCard label="HELOC balance" value="—" />
           <StatCard label="Margin account" value="—" />
           <StatCard label="RRSP value" value="—" />
+          <StatCard label="HELOC refunds" value="—" />
+          <StatCard label="RRSP refunds" value="—" />
           <StatCard label="Net equity" value="—" />
         </div>
       </div>
     );
   }
 
-  const { helocBalance, marginAccountValue, rrspValue, netEquity } = results;
+  const { helocBalance, marginAccountValue, rrspValue, netEquity, cumulativeHelocRefund, cumulativeRrspRefund } = results;
 
   return (
     <div className="flex flex-col gap-4">
@@ -65,7 +67,17 @@ export default function ResultsSummary({ results }: Props) {
         <StatCard
           label="RRSP value"
           value={formatDollars(rrspValue)}
-          sub="tax refunds compounded"
+          sub="both refund streams compounded"
+        />
+        <StatCard
+          label="HELOC refunds"
+          value={formatDollars(cumulativeHelocRefund)}
+          sub="interest deduction refunds contributed"
+        />
+        <StatCard
+          label="RRSP refunds"
+          value={formatDollars(cumulativeRrspRefund)}
+          sub="RRSP deduction refunds reinvested"
         />
         <StatCard
           label="Net equity"

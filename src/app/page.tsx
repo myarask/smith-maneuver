@@ -29,7 +29,7 @@ const DEFAULTS: FormState = {
   helocRate: "7.2",
   investmentReturn: "10.0",
   marginalTaxRate: "43.0",
-  timeHorizon: "25",
+  timeHorizon: "10",
 };
 
 function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
@@ -44,15 +44,31 @@ function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
   const years = parseFloat(form.timeHorizon);
 
   if (
-    isNaN(homeValue) || homeValue <= 0 ||
-    isNaN(appreciationRate) || appreciationRate < 0 || appreciationRate > 0.2 ||
-    isNaN(mortgageBalance) || mortgageBalance <= 0 ||
-    isNaN(mortgageRate) || mortgageRate <= 0 || mortgageRate >= 1 ||
-    isNaN(amortizationYears) || amortizationYears < 1 || amortizationYears > 30 ||
-    isNaN(helocRate) || helocRate <= 0 || helocRate >= 1 ||
-    isNaN(investmentReturn) || investmentReturn <= 0 || investmentReturn >= 1 ||
-    isNaN(marginalTaxRate) || marginalTaxRate <= 0 || marginalTaxRate >= 1 ||
-    isNaN(years) || years < 1 || years > 50
+    isNaN(homeValue) ||
+    homeValue <= 0 ||
+    isNaN(appreciationRate) ||
+    appreciationRate < 0 ||
+    appreciationRate > 0.2 ||
+    isNaN(mortgageBalance) ||
+    mortgageBalance <= 0 ||
+    isNaN(mortgageRate) ||
+    mortgageRate <= 0 ||
+    mortgageRate >= 1 ||
+    isNaN(amortizationYears) ||
+    amortizationYears < 1 ||
+    amortizationYears > 30 ||
+    isNaN(helocRate) ||
+    helocRate <= 0 ||
+    helocRate >= 1 ||
+    isNaN(investmentReturn) ||
+    investmentReturn <= 0 ||
+    investmentReturn >= 1 ||
+    isNaN(marginalTaxRate) ||
+    marginalTaxRate <= 0 ||
+    marginalTaxRate >= 1 ||
+    isNaN(years) ||
+    years < 1 ||
+    years > 50
   ) {
     return null;
   }
