@@ -80,9 +80,6 @@ export default function CalculatorForm({ form, onChange }: Props) {
         {field("investmentReturn", "Expected annual return", undefined, "%", "10.0", "0.01", "Conservative: 6–8%, optimistic: 10–12%")}
         {field("marginalTaxRate", "Marginal tax rate", undefined, "%", "43.0", "0.01", "Your combined federal + provincial rate")}
       </>)}
-      {section("Scenario", <>
-        {field("timeHorizon", "Time horizon", undefined, "years", "25", "1", "1–50 years")}
-      </>)}
     </div>
   );
 }

@@ -17,7 +17,6 @@ export type FormState = {
   helocRate: string;
   investmentReturn: string;
   marginalTaxRate: string;
-  timeHorizon: string;
 };
 
 const DEFAULTS: FormState = {
@@ -29,7 +28,6 @@ const DEFAULTS: FormState = {
   helocRate: "7.2",
   investmentReturn: "10.0",
   marginalTaxRate: "43.0",
-  timeHorizon: "10",
 };
 
 function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
@@ -41,8 +39,6 @@ function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
   const helocRate = parseFloat(form.helocRate) / 100;
   const investmentReturn = parseFloat(form.investmentReturn) / 100;
   const marginalTaxRate = parseFloat(form.marginalTaxRate) / 100;
-  const years = parseFloat(form.timeHorizon);
-
   if (
     isNaN(homeValue) ||
     homeValue <= 0 ||
@@ -65,10 +61,7 @@ function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
     investmentReturn >= 1 ||
     isNaN(marginalTaxRate) ||
     marginalTaxRate <= 0 ||
-    marginalTaxRate >= 1 ||
-    isNaN(years) ||
-    years < 1 ||
-    years > 50
+    marginalTaxRate >= 1
   ) {
     return null;
   }
@@ -82,7 +75,7 @@ function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
     helocRate,
     investmentReturn,
     marginalTaxRate,
-    years,
+    years: 10,
   };
 }
 
