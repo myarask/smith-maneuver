@@ -3,9 +3,13 @@
 import { useState, useMemo } from "react";
 import CalculatorForm from "@/components/CalculatorForm";
 import ResultsSummary from "@/components/ResultsSummary";
-import { calculateSmithManeuver, SmithManeuverInputs } from "@/lib/smith-maneuver";
+import {
+  calculateSmithManeuver,
+  SmithManeuverInputs,
+} from "@/lib/smith-maneuver";
 
 export type FormState = {
+  homeValue: string;
   mortgageBalance: string;
   mortgageRate: string;
   amortizationYears: string;
@@ -15,11 +19,12 @@ export type FormState = {
 };
 
 const DEFAULTS: FormState = {
+  homeValue: "700000",
   mortgageBalance: "500000",
   mortgageRate: "5.5",
   amortizationYears: "25",
   helocRate: "7.2",
-  investmentReturn: "7.0",
+  investmentReturn: "10.0",
   marginalTaxRate: "43.0",
 };
 
@@ -32,17 +37,35 @@ function parseForm(form: FormState): SmithManeuverInputs | null {
   const marginalTaxRate = parseFloat(form.marginalTaxRate) / 100;
 
   if (
-    isNaN(mortgageBalance) || mortgageBalance <= 0 ||
-    isNaN(mortgageRate) || mortgageRate <= 0 || mortgageRate >= 1 ||
-    isNaN(amortizationYears) || amortizationYears < 1 || amortizationYears > 30 ||
-    isNaN(helocRate) || helocRate <= 0 || helocRate >= 1 ||
-    isNaN(investmentReturn) || investmentReturn <= 0 || investmentReturn >= 1 ||
-    isNaN(marginalTaxRate) || marginalTaxRate <= 0 || marginalTaxRate >= 1
+    isNaN(mortgageBalance) ||
+    mortgageBalance <= 0 ||
+    isNaN(mortgageRate) ||
+    mortgageRate <= 0 ||
+    mortgageRate >= 1 ||
+    isNaN(amortizationYears) ||
+    amortizationYears < 1 ||
+    amortizationYears > 30 ||
+    isNaN(helocRate) ||
+    helocRate <= 0 ||
+    helocRate >= 1 ||
+    isNaN(investmentReturn) ||
+    investmentReturn <= 0 ||
+    investmentReturn >= 1 ||
+    isNaN(marginalTaxRate) ||
+    marginalTaxRate <= 0 ||
+    marginalTaxRate >= 1
   ) {
     return null;
   }
 
-  return { mortgageBalance, mortgageRate, amortizationYears, helocRate, investmentReturn, marginalTaxRate };
+  return {
+    mortgageBalance,
+    mortgageRate,
+    amortizationYears,
+    helocRate,
+    investmentReturn,
+    marginalTaxRate,
+  };
 }
 
 export default function Home() {
@@ -64,7 +87,8 @@ export default function Home() {
           Smith Maneuver
         </h1>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Estimate the lifetime value of converting your mortgage into a tax-deductible investment loan.
+          Estimate the lifetime value of converting your mortgage into a
+          tax-deductible investment loan.
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-8 w-full max-w-4xl items-start">
