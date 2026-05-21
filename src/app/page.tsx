@@ -67,9 +67,11 @@ export default function Home() {
           Estimate the lifetime value of converting your mortgage into a tax-deductible investment loan.
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+      <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-8 w-full max-w-4xl items-start">
         <CalculatorForm form={form} onChange={handleChange} />
-        <ResultsSummary results={results} />
+        <div className="sticky top-8">
+          <ResultsSummary results={results} />
+        </div>
       </div>
     </main>
   );
