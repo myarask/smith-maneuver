@@ -10,7 +10,8 @@ type Props = {
 
 const STEPS = [
   { title: "The Smith Maneuver", subtitle: "An introduction" },
-  { title: "The Spread", subtitle: "Your borrowing cost vs. expected return" },
+  { title: "The Spread", subtitle: "Your expected return" },
+  { title: "Borrowing Costs", subtitle: "What it costs to borrow" },
   { title: "Property", subtitle: "Tell us about your home" },
   { title: "Mortgage", subtitle: "Your current mortgage details" },
 ];
@@ -170,7 +171,11 @@ export default function CalculatorForm({ form, onChange }: Props) {
             })()}
           </div>
 
-          <hr className="border-zinc-200 dark:border-zinc-800" />
+        </>
+      );
+    if (step === 2)
+      return (
+        <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Next, enter your borrowing costs. For homeowners, this is typically
             the interest rate on a HELOC (Prime + 0.5–1.5%). Your marginal tax
@@ -196,7 +201,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
           )}
         </>
       );
-    if (step === 2)
+    if (step === 3)
       return (
         <>
           {field(
@@ -218,7 +223,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
           )}
         </>
       );
-    if (step === 3)
+    if (step === 4)
       return (
         <>
           {field(
