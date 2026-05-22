@@ -81,7 +81,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             The viability of the Smith Maneuver depends on the difference
             between your expected investment return and your borrowing cost. To
-            begin, select a qualifying investment vehicle.
+            begin, select a qualifying investment.
           </p>
           {field(
             "investmentReturn",
@@ -92,6 +92,13 @@ export default function CalculatorForm({ form, onChange }: Props) {
             "0.01",
             "Conservative: 6–8%, optimistic: 10–12%",
           )}
+
+          <hr className="border-zinc-200 dark:border-zinc-800" />
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Next, enter your borrowing costs. For homeowners, this is typically
+            the interest rate on a HELOC (Prime + 0.5–1.5%). Your marginal tax
+            rate affects how much of the interest will be refunded to you.
+          </p>
           {field(
             "helocRate",
             "HELOC interest rate",
