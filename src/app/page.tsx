@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import CalculatorForm from "@/components/CalculatorForm";
 import ResultsSummary from "@/components/ResultsSummary";
 import StatsFooter from "@/components/StatsFooter";
@@ -20,13 +20,13 @@ export type FormState = {
   marginalTaxRate: string;
 };
 
-const DEFAULTS: FormState = {
+export const DEFAULTS: FormState = {
   homeValue: "700000",
   appreciationRate: "3.0",
   mortgageBalance: "500000",
   mortgageRate: "5.5",
   amortizationYears: "25",
-  interestRate: "7.2",
+  interestRate: "5.0",
   investmentReturn: "8.0",
   marginalTaxRate: "43.0",
 };
@@ -82,6 +82,22 @@ function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
 
 export default function Home() {
   const [form, setForm] = useState<FormState>(DEFAULTS);
+
+  useEffect(() => {
+    fetch(
+      "https://www.bankofcanada.ca/valet/observations/V122667806/json?recent=1",
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        const obs = data?.observations?.[0];
+        let rate = parseFloat(obs?.V122667806?.v);
+        if (!isNaN(rate)) {
+          rate += 1;
+          setForm((f) => ({ ...f, interestRate: rate.toFixed(1) }));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const results = useMemo(() => {
     const parsed = parseForm(form);

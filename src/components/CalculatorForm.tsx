@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, Fragment } from "react";
-import { FormState } from "@/app/page";
+import { DEFAULTS, FormState } from "@/app/page";
 
 type Props = {
   form: FormState;
   onChange: (key: keyof FormState, value: string) => void;
+  interestRateHint?: string;
 };
 
 const STEPS = [
@@ -184,16 +185,16 @@ export default function CalculatorForm({ form, onChange }: Props) {
             "Interest rate",
             undefined,
             "%",
-            "7.2",
+            DEFAULTS.interestRate,
             "0.01",
-            "Usually prime + 0.5–1.5%",
+            `Market HELOC variable interest rate: ${form.interestRate}%`,
           )}
           {field(
             "marginalTaxRate",
             "Marginal tax rate",
             undefined,
             "%",
-            "43.0",
+            DEFAULTS.marginalTaxRate,
             "0.01",
             "Your combined federal + provincial rate",
           )}
@@ -207,7 +208,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
             "Home appraised value",
             "$",
             undefined,
-            "700000",
+            DEFAULTS.homeValue,
             "1",
           )}
           {field(
@@ -215,7 +216,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
             "Home appreciation rate",
             undefined,
             "%",
-            "3.0",
+            DEFAULTS.appreciationRate,
             "0.1",
             "Typical: 2–5% annually",
           )}
@@ -229,7 +230,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
             "Mortgage balance",
             "$",
             undefined,
-            "500000",
+            DEFAULTS.mortgageBalance,
             "1",
           )}
           {field(
@@ -237,14 +238,14 @@ export default function CalculatorForm({ form, onChange }: Props) {
             "Mortgage interest rate",
             undefined,
             "%",
-            "5.5",
+            DEFAULTS.mortgageRate,
           )}
           {field(
             "amortizationYears",
             "Amortization remaining",
             undefined,
             "years",
-            "25",
+            DEFAULTS.amortizationYears,
             "1",
           )}
         </>
