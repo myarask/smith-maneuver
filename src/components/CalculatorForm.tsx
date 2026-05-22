@@ -10,11 +10,11 @@ type Props = {
 };
 
 const STEPS = [
-  { title: "The Smith Maneuver", subtitle: "An introduction" },
-  { title: "Expected Returns", subtitle: "Estimate the upside" },
-  { title: "Borrowing Costs", subtitle: "Estimate the downside" },
-  { title: "Property", subtitle: "Tell us about your home" },
-  { title: "Mortgage", subtitle: "Your current mortgage details" },
+  { title: "The Smith Maneuver" },
+  { title: "Expected Returns" },
+  { title: "Borrowing Costs" },
+  { title: "Property" },
+  { title: "Mortgage" },
 ];
 
 const SCENARIOS = [
@@ -282,9 +282,6 @@ export default function CalculatorForm({ form, onChange }: Props) {
         <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
           {STEPS[step].title}
         </h3>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          {STEPS[step].subtitle}
-        </p>
       </div>
 
       <div className="flex flex-col gap-4">{stepFields()}</div>
@@ -302,7 +299,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
             onClick={() => setStep((s) => s + 1)}
             className="text-sm font-medium bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 px-4 py-1.5 rounded-md"
           >
-            Next →
+            {step === 0 ? "Show me" : "Next →"}
           </button>
         )}
       </div>
