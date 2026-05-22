@@ -71,7 +71,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
+    <div className="flex flex-col gap-5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 shadow-xl">
       <div className="flex items-center">
         {STEPS.map((_s, i) => (
           <Fragment key={i}>
