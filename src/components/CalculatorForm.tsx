@@ -15,6 +15,24 @@ const STEPS = [
   { title: "Mortgage", subtitle: "Your current mortgage details" },
 ];
 
+const SCENARIOS = [
+  {
+    label: "Outperform",
+    description: "Beating a broad market index",
+    return: "12.0",
+  },
+  {
+    label: "Average",
+    description: "Typical diversified portfolio",
+    return: "8.0",
+  },
+  {
+    label: "Underperform",
+    description: "Below-market or weak conditions",
+    return: "5.0",
+  },
+];
+
 export default function CalculatorForm({ form, onChange }: Props) {
   const [step, setStep] = useState(0);
 
@@ -81,17 +99,76 @@ export default function CalculatorForm({ form, onChange }: Props) {
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             The viability of the Smith Maneuver depends on the difference
             between your expected investment return and your borrowing cost. To
-            begin, select a qualifying investment.
+            begin, estimate your average annual return.
           </p>
-          {field(
-            "investmentReturn",
-            "Expected annual return",
-            undefined,
-            "%",
-            "10.0",
-            "0.01",
-            "Conservative: 6–8%, optimistic: 10–12%",
-          )}
+          <div className="flex flex-col gap-2">
+            {SCENARIOS.map((scenario) => {
+              const selected = form.investmentReturn === scenario.return;
+              return (
+                <button
+                  key={scenario.label}
+                  type="button"
+                  onClick={() => onChange("investmentReturn", scenario.return)}
+                  className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-left transition-colors ${
+                    selected
+                      ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800"
+                      : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-zinc-400 dark:hover:border-zinc-500"
+                  }`}
+                >
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                      {scenario.label}
+                    </span>
+                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                      {scenario.description}
+                    </span>
+                  </div>
+                  <span className="text-sm font-mono font-semibold text-zinc-700 dark:text-zinc-300">
+                    {scenario.return}%
+                  </span>
+                </button>
+              );
+            })}
+            {(() => {
+              const isCustom = !SCENARIOS.some(
+                (s) => s.return === form.investmentReturn,
+              );
+              return (
+                <div
+                  className={`flex items-center justify-between rounded-lg border px-3 py-2.5 transition-colors ${
+                    isCustom
+                      ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800"
+                      : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900"
+                  }`}
+                >
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                      Custom
+                    </span>
+                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                      Enter your own expected return
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      placeholder="—"
+                      value={isCustom ? form.investmentReturn : ""}
+                      onChange={(e) =>
+                        onChange("investmentReturn", e.target.value)
+                      }
+                      className="w-14 py-1 px-2 rounded border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-sm font-mono text-right outline-none focus:ring-1 focus:ring-zinc-500 text-zinc-900 dark:text-zinc-50"
+                    />
+                    <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                      %
+                    </span>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
 
           <hr className="border-zinc-200 dark:border-zinc-800" />
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">

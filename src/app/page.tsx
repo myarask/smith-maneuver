@@ -27,7 +27,7 @@ const DEFAULTS: FormState = {
   mortgageRate: "5.5",
   amortizationYears: "25",
   helocRate: "7.2",
-  investmentReturn: "10.0",
+  investmentReturn: "8.0",
   marginalTaxRate: "43.0",
 };
 
