@@ -10,9 +10,9 @@ type Props = {
 
 const STEPS = [
   { title: "The Smith Maneuver", subtitle: "An introduction" },
+  { title: "The Spread", subtitle: "Your borrowing cost vs. expected return" },
   { title: "Property", subtitle: "Tell us about your home" },
   { title: "Mortgage", subtitle: "Your current mortgage details" },
-  { title: "Investment & Tax", subtitle: "Expected returns and your tax rate" },
 ];
 
 export default function CalculatorForm({ form, onChange }: Props) {
@@ -70,12 +70,49 @@ export default function CalculatorForm({ form, onChange }: Props) {
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             By borrowing to invest, you can benefit from compounding returns of
-            both your investments and tax savings, accelerating your wealth
-            growth over time.
+            both your investments and tax refunds, boosting your savings over
+            time.
           </p>
         </>
       );
     if (step === 1)
+      return (
+        <>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            The viability of the Smith Maneuver depends on the difference
+            between your expected investment return and your borrowing cost. To
+            begin, select a qualifying investment vehicle.
+          </p>
+          {field(
+            "investmentReturn",
+            "Expected annual return",
+            undefined,
+            "%",
+            "10.0",
+            "0.01",
+            "Conservative: 6–8%, optimistic: 10–12%",
+          )}
+          {field(
+            "helocRate",
+            "HELOC interest rate",
+            undefined,
+            "%",
+            "7.2",
+            "0.01",
+            "Usually prime + 0.5–1.5%",
+          )}
+          {field(
+            "marginalTaxRate",
+            "Marginal tax rate",
+            undefined,
+            "%",
+            "43.0",
+            "0.01",
+            "Your combined federal + provincial rate",
+          )}
+        </>
+      );
+    if (step === 2)
       return (
         <>
           {field(
@@ -97,7 +134,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
           )}
         </>
       );
-    if (step === 2)
+    if (step === 3)
       return (
         <>
           {field(
@@ -125,37 +162,6 @@ export default function CalculatorForm({ form, onChange }: Props) {
           )}
         </>
       );
-    return (
-      <>
-        {field(
-          "helocRate",
-          "HELOC interest rate",
-          undefined,
-          "%",
-          "7.2",
-          "0.01",
-          "Usually prime + 0.5–1.5%",
-        )}
-        {field(
-          "investmentReturn",
-          "Expected annual return",
-          undefined,
-          "%",
-          "10.0",
-          "0.01",
-          "Conservative: 6–8%, optimistic: 10–12%",
-        )}
-        {field(
-          "marginalTaxRate",
-          "Marginal tax rate",
-          undefined,
-          "%",
-          "43.0",
-          "0.01",
-          "Your combined federal + provincial rate",
-        )}
-      </>
-    );
   }
 
   return (
