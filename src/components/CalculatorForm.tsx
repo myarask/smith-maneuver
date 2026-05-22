@@ -9,6 +9,7 @@ type Props = {
 };
 
 const STEPS = [
+  { title: "The Smith Maneuver", subtitle: "An introduction" },
   { title: "Property", subtitle: "Tell us about your home" },
   { title: "Mortgage", subtitle: "Your current mortgage details" },
   { title: "Investment & Tax", subtitle: "Expected returns and your tax rate" },
@@ -63,6 +64,20 @@ export default function CalculatorForm({ form, onChange }: Props) {
     if (step === 0)
       return (
         <>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            In Canada, the interest on a loan used to invest in income-producing
+            assets (like stocks or ETFs) is tax-deductible.
+          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            By borrowing to invest, you can benefit from compounding returns of
+            both your investments and tax savings, accelerating your wealth
+            growth over time.
+          </p>
+        </>
+      );
+    if (step === 1)
+      return (
+        <>
           {field(
             "homeValue",
             "Home appraised value",
@@ -82,7 +97,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
           )}
         </>
       );
-    if (step === 1)
+    if (step === 2)
       return (
         <>
           {field(
