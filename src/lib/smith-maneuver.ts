@@ -2,7 +2,7 @@ export type SmithManeuverInputs = {
   mortgageBalance: number;
   mortgageRate: number;
   amortizationYears: number;
-  helocRate: number;
+  interestRate: number;
   investmentReturn: number;
   marginalTaxRate: number;
 };
@@ -29,7 +29,7 @@ export type CapitalizingSmithManeuverInputs = {
   mortgageBalance: number;
   mortgageRate: number;
   amortizationYears: number;
-  helocRate: number;
+  interestRate: number;
   investmentReturn: number;
   marginalTaxRate: number;
   years: number;
@@ -57,15 +57,29 @@ export type CapitalizingSmithManeuverResult = {
   yearlySnapshots: CapitalizingYearlySnapshot[];
 };
 
-function fixedMonthlyPayment(principal: number, annualRate: number, months: number): number {
+function fixedMonthlyPayment(
+  principal: number,
+  annualRate: number,
+  months: number,
+): number {
   const r = annualRate / 12;
   if (r === 0) return principal / months;
-  return (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+  return (
+    (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1)
+  );
 }
 
-function baselineMonths(principal: number, annualRate: number, amortizationYears: number): number {
+function baselineMonths(
+  principal: number,
+  annualRate: number,
+  amortizationYears: number,
+): number {
   const r = annualRate / 12;
-  const payment = fixedMonthlyPayment(principal, annualRate, amortizationYears * 12);
+  const payment = fixedMonthlyPayment(
+    principal,
+    annualRate,
+    amortizationYears * 12,
+  );
   let balance = principal;
   let months = 0;
   const maxMonths = amortizationYears * 12 + 12;
@@ -76,12 +90,25 @@ function baselineMonths(principal: number, annualRate: number, amortizationYears
   return months;
 }
 
-export function calculateSmithManeuver(inputs: SmithManeuverInputs): SmithManeuverResult {
-  const { mortgageBalance, mortgageRate, amortizationYears, helocRate, investmentReturn, marginalTaxRate } = inputs;
+export function calculateSmithManeuver(
+  inputs: SmithManeuverInputs,
+): SmithManeuverResult {
+  const {
+    mortgageBalance,
+    mortgageRate,
+    amortizationYears,
+    interestRate,
+    investmentReturn,
+    marginalTaxRate,
+  } = inputs;
 
   const r = mortgageRate / 12;
   const ri = investmentReturn / 12;
-  const payment = fixedMonthlyPayment(mortgageBalance, mortgageRate, amortizationYears * 12);
+  const payment = fixedMonthlyPayment(
+    mortgageBalance,
+    mortgageRate,
+    amortizationYears * 12,
+  );
 
   let mortgage = mortgageBalance;
   let heloc = 0;
@@ -101,7 +128,7 @@ export function calculateSmithManeuver(inputs: SmithManeuverInputs): SmithManeuv
     heloc += principalPaid;
     portfolio = (portfolio + principalPaid) * (1 + ri);
 
-    helocInterestAccrued += heloc * (helocRate / 12);
+    helocInterestAccrued += heloc * (interestRate / 12);
 
     month++;
 
@@ -125,13 +152,17 @@ export function calculateSmithManeuver(inputs: SmithManeuverInputs): SmithManeuv
     portfolioValue: portfolio,
     totalTaxSavings,
     monthsToPayoff: month,
-    baselineMonthsToPayoff: baselineMonths(mortgageBalance, mortgageRate, amortizationYears),
+    baselineMonthsToPayoff: baselineMonths(
+      mortgageBalance,
+      mortgageRate,
+      amortizationYears,
+    ),
     yearlySnapshots,
   };
 }
 
 export function calculateCapitalizingSmithManeuver(
-  inputs: CapitalizingSmithManeuverInputs
+  inputs: CapitalizingSmithManeuverInputs,
 ): CapitalizingSmithManeuverResult {
   const {
     homeValue: initialHomeValue,
@@ -139,18 +170,25 @@ export function calculateCapitalizingSmithManeuver(
     mortgageBalance: initialMortgageBalance,
     mortgageRate,
     amortizationYears,
-    helocRate,
+    interestRate,
     investmentReturn,
     marginalTaxRate,
     years,
   } = inputs;
 
   const r = mortgageRate / 12;
-  const payment = fixedMonthlyPayment(initialMortgageBalance, mortgageRate, amortizationYears * 12);
+  const payment = fixedMonthlyPayment(
+    initialMortgageBalance,
+    mortgageRate,
+    amortizationYears * 12,
+  );
 
   const initialHelocCap = Math.max(
-    Math.min(0.8 * initialHomeValue - initialMortgageBalance, 0.65 * initialHomeValue),
-    0
+    Math.min(
+      0.8 * initialHomeValue - initialMortgageBalance,
+      0.65 * initialHomeValue,
+    ),
+    0,
   );
 
   let mortgage = initialMortgageBalance;
@@ -184,10 +222,13 @@ export function calculateCapitalizingSmithManeuver(
     }
 
     const homeValue = initialHomeValue * Math.pow(1 + appreciationRate, year);
-    const helocCap = Math.max(Math.min(0.8 * homeValue - mortgage, 0.65 * homeValue), 0);
+    const helocCap = Math.max(
+      Math.min(0.8 * homeValue - mortgage, 0.65 * homeValue),
+      0,
+    );
 
     // Capitalize HELOC interest (capped at HELOC limit)
-    const helocInterest = helocBalance * helocRate;
+    const helocInterest = helocBalance * interestRate;
     helocBalance = Math.min(helocBalance + helocInterest, helocCap);
 
     // Draw remaining new room and invest
@@ -198,8 +239,12 @@ export function calculateCapitalizingSmithManeuver(
     marginAccount = marginAccount * (1 + investmentReturn);
 
     const helocInterestRefund = helocInterest * marginalTaxRate;
-    const rrspRefundContribution = helocInterestRefund * marginalTaxRate / (1 - marginalTaxRate);
-    rrsp = rrsp * (1 + investmentReturn) + helocInterestRefund + rrspRefundContribution;
+    const rrspRefundContribution =
+      (helocInterestRefund * marginalTaxRate) / (1 - marginalTaxRate);
+    rrsp =
+      rrsp * (1 + investmentReturn) +
+      helocInterestRefund +
+      rrspRefundContribution;
     cumulativeHelocRefund += helocInterestRefund;
     cumulativeRrspRefund += rrspRefundContribution;
 

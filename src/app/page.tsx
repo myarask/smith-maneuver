@@ -15,7 +15,7 @@ export type FormState = {
   mortgageBalance: string;
   mortgageRate: string;
   amortizationYears: string;
-  helocRate: string;
+  interestRate: string;
   investmentReturn: string;
   marginalTaxRate: string;
 };
@@ -26,7 +26,7 @@ const DEFAULTS: FormState = {
   mortgageBalance: "500000",
   mortgageRate: "5.5",
   amortizationYears: "25",
-  helocRate: "7.2",
+  interestRate: "7.2",
   investmentReturn: "8.0",
   marginalTaxRate: "43.0",
 };
@@ -37,7 +37,7 @@ function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
   const mortgageBalance = parseFloat(form.mortgageBalance);
   const mortgageRate = parseFloat(form.mortgageRate) / 100;
   const amortizationYears = parseFloat(form.amortizationYears);
-  const helocRate = parseFloat(form.helocRate) / 100;
+  const interestRate = parseFloat(form.interestRate) / 100;
   const investmentReturn = parseFloat(form.investmentReturn) / 100;
   const marginalTaxRate = parseFloat(form.marginalTaxRate) / 100;
   if (
@@ -54,9 +54,9 @@ function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
     isNaN(amortizationYears) ||
     amortizationYears < 1 ||
     amortizationYears > 30 ||
-    isNaN(helocRate) ||
-    helocRate <= 0 ||
-    helocRate >= 1 ||
+    isNaN(interestRate) ||
+    interestRate <= 0 ||
+    interestRate >= 1 ||
     isNaN(investmentReturn) ||
     investmentReturn <= 0 ||
     investmentReturn >= 1 ||
@@ -73,7 +73,7 @@ function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
     mortgageBalance,
     mortgageRate,
     amortizationYears,
-    helocRate,
+    interestRate,
     investmentReturn,
     marginalTaxRate,
     years: 10,

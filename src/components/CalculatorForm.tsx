@@ -10,8 +10,8 @@ type Props = {
 
 const STEPS = [
   { title: "The Smith Maneuver", subtitle: "An introduction" },
-  { title: "The Spread", subtitle: "Your expected return" },
-  { title: "Borrowing Costs", subtitle: "What it costs to borrow" },
+  { title: "Expected Returns", subtitle: "Estimate the upside" },
+  { title: "Borrowing Costs", subtitle: "Estimate the downside" },
   { title: "Property", subtitle: "Tell us about your home" },
   { title: "Mortgage", subtitle: "Your current mortgage details" },
 ];
@@ -170,20 +170,18 @@ export default function CalculatorForm({ form, onChange }: Props) {
               );
             })()}
           </div>
-
         </>
       );
     if (step === 2)
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Next, enter your borrowing costs. For homeowners, this is typically
-            the interest rate on a HELOC (Prime + 0.5–1.5%). Your marginal tax
-            rate affects how much of the interest will be refunded to you.
+            Estimate your cost to borrow. Your marginal tax rate affects how
+            much of the interest will be refunded to you annually.
           </p>
           {field(
-            "helocRate",
-            "HELOC interest rate",
+            "interestRate",
+            "Interest rate",
             undefined,
             "%",
             "7.2",
