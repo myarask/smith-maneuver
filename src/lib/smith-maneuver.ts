@@ -1,29 +1,4 @@
-export type SmithManeuverInputs = {
-  mortgageBalance: number;
-  mortgageRate: number;
-  amortizationYears: number;
-  interestRate: number;
-  investmentReturn: number;
-  marginalTaxRate: number;
-};
-
-export type YearlySnapshot = {
-  year: number;
-  portfolioValue: number;
-  mortgageBalance: number;
-  helocBalance: number;
-  cumulativeTaxSavings: number;
-};
-
-export type SmithManeuverResult = {
-  portfolioValue: number;
-  totalTaxSavings: number;
-  monthsToPayoff: number;
-  baselineMonthsToPayoff: number;
-  yearlySnapshots: YearlySnapshot[];
-};
-
-export type CapitalizingSmithManeuverInputs = {
+export type SimulationInputs = {
   homeValue: number;
   mortgageBalance: number;
   interestRate: number;
@@ -32,7 +7,7 @@ export type CapitalizingSmithManeuverInputs = {
   years: number;
 };
 
-export type CapitalizingYearlySnapshot = {
+export type Snapshot = {
   month: number;
   homeValue: number;
   mortgageBalance: number;
@@ -43,22 +18,18 @@ export type CapitalizingYearlySnapshot = {
   cumulativeHelocRefund: number;
 };
 
-export type CapitalizingSmithManeuverResult = {
-  snapshots: CapitalizingYearlySnapshot[];
+export type SimulationResults = {
+  snapshots: Snapshot[];
 };
 
-export function calculateCapitalizingSmithManeuver(
-  inputs: CapitalizingSmithManeuverInputs,
-): CapitalizingSmithManeuverResult {
-  const {
-    homeValue,
-    mortgageBalance,
-    interestRate,
-    investmentReturn,
-    marginalTaxRate,
-    years,
-  } = inputs;
-
+export function getSimulationResults({
+  homeValue,
+  mortgageBalance,
+  interestRate,
+  investmentReturn,
+  marginalTaxRate,
+  years,
+}: SimulationInputs): SimulationResults {
   const helocCap = Math.max(
     Math.min(0.8 * homeValue - mortgageBalance, 0.65 * homeValue),
     0,
@@ -76,7 +47,7 @@ export function calculateCapitalizingSmithManeuver(
   let yearlyRefundAccum = 0;
   let cumulativeHelocRefund = 0;
 
-  const snapshots: CapitalizingYearlySnapshot[] = [
+  const snapshots: Snapshot[] = [
     {
       month: 0,
       homeValue,

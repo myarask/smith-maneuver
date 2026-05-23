@@ -11,17 +11,17 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import type { CapitalizingYearlySnapshot } from "@/lib/smith-maneuver";
+import type { Snapshot } from "@/lib/smith-maneuver";
 
-type Props = { snapshots: CapitalizingYearlySnapshot[] };
+type Props = { snapshots: Snapshot[] };
 
-function formatCompact(n: number): string {
+function formatCompact(n: number) {
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
   return `$${n.toFixed(0)}`;
 }
 
-function formatDollars(n: number): string {
+function formatDollars(n: number) {
   return n.toLocaleString("en-CA", {
     style: "currency",
     currency: "CAD",
@@ -34,11 +34,11 @@ const START_MONTH = new Date().getMonth();
 
 const YEAR_TICKS = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120];
 
-function formatTick(month: number): string {
+function formatTick(month: number) {
   return String(START_YEAR + month / 12);
 }
 
-function formatMonthLabel(month: number): string {
+function formatMonthLabel(month: number) {
   const d = new Date(START_YEAR, START_MONTH + month);
   return d.toLocaleDateString("en-CA", { month: "short", year: "numeric" });
 }
@@ -46,8 +46,15 @@ function formatMonthLabel(month: number): string {
 export default function EquityChart({ snapshots }: Props) {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <ComposedChart data={snapshots} margin={{ top: 4, right: 4, left: 8, bottom: 8 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#d4d4d8" strokeOpacity={0.5} />
+      <ComposedChart
+        data={snapshots}
+        margin={{ top: 4, right: 4, left: 8, bottom: 8 }}
+      >
+        <CartesianGrid
+          strokeDasharray="3 3"
+          stroke="#d4d4d8"
+          strokeOpacity={0.5}
+        />
         <XAxis
           dataKey="month"
           ticks={YEAR_TICKS}

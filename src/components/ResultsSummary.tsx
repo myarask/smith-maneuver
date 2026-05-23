@@ -1,8 +1,8 @@
-import { CapitalizingSmithManeuverResult } from "@/lib/smith-maneuver";
+import { SimulationResults } from "@/lib/smith-maneuver";
 import EquityChart from "./EquityChart";
 
 type Props = {
-  results: CapitalizingSmithManeuverResult | null;
+  results: SimulationResults | null;
 };
 
 export default function ResultsSummary({ results }: Props) {

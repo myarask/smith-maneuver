@@ -3,10 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import CalculatorForm from "@/components/CalculatorForm";
 import ResultsSummary from "@/components/ResultsSummary";
-import {
-  calculateCapitalizingSmithManeuver,
-  CapitalizingSmithManeuverInputs,
-} from "@/lib/smith-maneuver";
+import { getSimulationResults, SimulationInputs } from "@/lib/smith-maneuver";
 
 export type FormState = {
   homeValue: string;
@@ -24,7 +21,7 @@ export const DEFAULTS: FormState = {
   marginalTaxRate: "43.0",
 };
 
-function parseForm(form: FormState): CapitalizingSmithManeuverInputs | null {
+function parseForm(form: FormState): SimulationInputs | null {
   const homeValue = parseFloat(form.homeValue);
   const mortgageBalance = parseFloat(form.mortgageBalance);
   const interestRate = parseFloat(form.interestRate) / 100;
@@ -79,7 +76,7 @@ export default function Home() {
 
   const results = useMemo(() => {
     const parsed = parseForm(form);
-    return parsed ? calculateCapitalizingSmithManeuver(parsed) : null;
+    return parsed ? getSimulationResults(parsed) : null;
   }, [form]);
 
   function handleChange(key: keyof FormState, value: string) {
