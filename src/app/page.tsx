@@ -87,16 +87,12 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col bg-zinc-50 dark:bg-zinc-950">
-      <div className="relative min-h-screen">
-        <div className="absolute inset-0 bg-zinc-50 dark:bg-zinc-950">
-          <ResultsSummary results={results} />
-        </div>
-        <div className="absolute inset-0 flex items-center justify-center p-4">
-          <div className="w-full max-w-sm">
-            <CalculatorForm form={form} onChange={handleChange} />
-          </div>
-        </div>
+    <main className="flex h-screen bg-zinc-50 dark:bg-zinc-950">
+      <div className="w-96 flex-none flex flex-col justify-center border-r border-zinc-200 dark:border-zinc-800 p-4 overflow-y-auto">
+        <CalculatorForm form={form} onChange={handleChange} />
+      </div>
+      <div className="flex-1 min-w-0 h-full">
+        <ResultsSummary results={results} />
       </div>
     </main>
   );
