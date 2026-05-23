@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, Fragment } from "react";
-import { DEFAULTS } from "@/app/page";
 import { FormState } from "@/global/types";
+import { DEFAULTS } from "@/global/constants";
 
 const STEPS = [
   { title: "The Smith Maneuver" },

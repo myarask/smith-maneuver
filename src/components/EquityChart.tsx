@@ -13,8 +13,6 @@ import {
 } from "recharts";
 import type { Snapshot } from "@/lib/smith-maneuver";
 
-type Props = { snapshots: Snapshot[] };
-
 function formatCompact(n: number) {
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
@@ -31,7 +29,6 @@ function formatDollars(n: number) {
 
 const START_YEAR = new Date().getFullYear();
 const START_MONTH = new Date().getMonth();
-
 const YEAR_TICKS = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120];
 
 function formatTick(month: number) {
@@ -45,7 +42,7 @@ function formatMonthLabel(month: number) {
   return d.toLocaleDateString("en-CA", { month: "short", year: "numeric" });
 }
 
-export default function EquityChart({ snapshots }: Props) {
+export default function EquityChart({ snapshots }: { snapshots: Snapshot[] }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart

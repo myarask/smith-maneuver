@@ -6,14 +6,7 @@ import ResultsSummary from "@/components/ResultsSummary";
 import { getSimulationResults } from "@/lib/smith-maneuver";
 import { parseForm } from "@/lib/parseForm";
 import { FormState } from "@/global/types";
-
-export const DEFAULTS: FormState = {
-  homeValue: "700000",
-  mortgageBalance: "500000",
-  interestRate: "5.0",
-  investmentReturn: "8.0",
-  marginalTaxRate: "43.0",
-};
+import { DEFAULTS } from "@/global/constants";
 
 export default function Home() {
   const [form, setForm] = useState<FormState>(DEFAULTS);
