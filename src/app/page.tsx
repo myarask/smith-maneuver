@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { useStore } from "@/store/useStore";
+import { setField } from "@/store/useStore";
 import CalculatorForm from "@/components/CalculatorForm";
 import EquityChart from "@/components/EquityChart";
 
 export default function Home() {
-  const { setField } = useStore();
-
   useEffect(() => {
     fetch(
       "https://www.bankofcanada.ca/valet/observations/V122667806/json?recent=1",
@@ -21,7 +19,7 @@ export default function Home() {
         }
       })
       .catch(() => {});
-  }, [setField]);
+  }, []);
 
   return (
     <main className="flex h-screen bg-zinc-50 dark:bg-zinc-950">

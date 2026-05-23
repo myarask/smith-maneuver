@@ -6,23 +6,26 @@ import { DEFAULTS } from "@/global/constants";
 interface CalculatorStore {
   form: FormState;
   step: number;
-  setField: (key: keyof FormState, value: string) => void;
-  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleNext: () => void;
-  handleBack: () => void;
-  handleJump: (step: number) => void;
 }
 
-export const useStore = create<CalculatorStore>((set) => ({
+export const useStore = create<CalculatorStore>(() => ({
   form: DEFAULTS,
   step: 0,
-  setField: (key, value) =>
-    set((state) => ({ form: { ...state.form, [key]: value } })),
-  handleChange: (e) =>
-    set((state) => ({
-      form: { ...state.form, [e.target.name]: e.target.value },
-    })),
-  handleNext: () => set((state) => ({ step: state.step + 1 })),
-  handleBack: () => set((state) => ({ step: state.step - 1 })),
-  handleJump: (step) => set({ step }),
 }));
+
+export const setField = (key: keyof FormState, value: string) =>
+  useStore.setState((s) => ({ form: { ...s.form, [key]: value } }));
+
+export const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+  useStore.setState((s) => ({
+    form: { ...s.form, [e.target.name]: e.target.value },
+  }));
+
+export const handleNext = () =>
+  useStore.setState((s) => ({ step: s.step + 1 }));
+
+export const handleBack = () =>
+  useStore.setState((s) => ({ step: s.step - 1 }));
+
+export const handleJump = (step: number) =>
+  useStore.setState({ step });

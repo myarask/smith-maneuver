@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment } from "react";
-import { useStore } from "@/store/useStore";
+import { useStore, setField, handleChange, handleBack, handleNext, handleJump } from "@/store/useStore";
 import { DEFAULTS } from "@/global/constants";
 import { FormState } from "@/global/types";
 
@@ -31,7 +31,7 @@ const SCENARIOS = [
 ];
 
 function BackButton() {
-  const { step, handleBack } = useStore();
+  const { step } = useStore();
 
   return (
     <button
@@ -45,7 +45,7 @@ function BackButton() {
 }
 
 function NextButton() {
-  const { step, handleNext } = useStore();
+  const { step } = useStore();
   if (step >= STEPS.length - 1) return null;
 
   return (
@@ -59,7 +59,7 @@ function NextButton() {
 }
 
 export default function CalculatorForm() {
-  const { form, step, setField, handleChange, handleJump } = useStore();
+  const { form, step } = useStore();
 
   function field(
     key: keyof FormState,
