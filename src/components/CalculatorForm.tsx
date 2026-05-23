@@ -10,7 +10,7 @@ import {
   handleJump,
 } from "@/global/store";
 import { DEFAULTS } from "@/global/constants";
-import { FormState } from "@/global/types";
+import Field from "./Field";
 
 const STEPS = [
   { title: "The Smith Maneuver" },
@@ -67,49 +67,6 @@ function NextButton() {
 
 export default function CalculatorForm() {
   const { form, step } = useStore();
-
-  function field(
-    key: keyof FormState,
-    label: string,
-    prefix?: string,
-    suffix?: string,
-    placeholder?: string,
-    fieldStep = "0.01",
-    hint?: string,
-  ) {
-    return (
-      <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          {label}
-        </label>
-        <div className="flex items-center rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 focus-within:ring-2 focus-within:ring-zinc-500">
-          {prefix && (
-            <span className="px-3 text-zinc-500 text-sm select-none">
-              {prefix}
-            </span>
-          )}
-          <input
-            type="number"
-            name={key}
-            step={fieldStep}
-            min="0"
-            placeholder={placeholder}
-            value={form[key]}
-            onChange={handleChange}
-            className="flex-1 py-2 px-3 bg-transparent text-zinc-900 dark:text-zinc-50 outline-none text-sm"
-          />
-          {suffix && (
-            <span className="px-3 text-zinc-500 text-sm select-none">
-              {suffix}
-            </span>
-          )}
-        </div>
-        {hint && (
-          <p className="text-xs text-zinc-400 dark:text-zinc-500">{hint}</p>
-        )}
-      </div>
-    );
-  }
 
   function stepFields() {
     if (step === 0)
@@ -215,24 +172,22 @@ export default function CalculatorForm() {
             Estimate your cost to borrow. Your marginal tax rate determines how
             much of the interest will be refunded to you annually.
           </p>
-          {field(
-            "interestRate",
-            "Interest rate",
-            undefined,
-            "%",
-            DEFAULTS.interestRate,
-            "0.01",
-            `Market HELOC variable interest rate: ${form.interestRate}%`,
-          )}
-          {field(
-            "marginalTaxRate",
-            "Marginal tax rate",
-            undefined,
-            "%",
-            DEFAULTS.marginalTaxRate,
-            "0.01",
-            "Your combined federal + provincial rate",
-          )}
+          <Field
+            name="interestRate"
+            label="Interest rate"
+            value={form.interestRate}
+            suffix="%"
+            placeholder={DEFAULTS.interestRate}
+            hint={`Market HELOC variable interest rate: ${form.interestRate}%`}
+          />
+          <Field
+            name="marginalTaxRate"
+            label="Marginal tax rate"
+            value={form.marginalTaxRate}
+            suffix="%"
+            placeholder={DEFAULTS.marginalTaxRate}
+            hint="Your combined federal + provincial rate"
+          />
           {(() => {
             const rate = parseFloat(form.interestRate);
             const tax = parseFloat(form.marginalTaxRate);
@@ -269,22 +224,22 @@ export default function CalculatorForm() {
             equity. Borrowing an amount below the maximum allows interest to be
             charged directly to the HELOC.
           </p>
-          {field(
-            "homeValue",
-            "Home value",
-            "$",
-            undefined,
-            DEFAULTS.homeValue,
-            "1",
-          )}
-          {field(
-            "mortgageBalance",
-            "Mortgage balance",
-            "$",
-            undefined,
-            DEFAULTS.mortgageBalance,
-            "1",
-          )}
+          <Field
+            name="homeValue"
+            label="Home value"
+            value={form.homeValue}
+            prefix="$"
+            placeholder={DEFAULTS.homeValue}
+            step="1"
+          />
+          <Field
+            name="mortgageBalance"
+            label="Mortgage balance"
+            value={form.mortgageBalance}
+            prefix="$"
+            placeholder={DEFAULTS.mortgageBalance}
+            step="1"
+          />
           {(() => {
             const hv = parseFloat(form.homeValue);
             const mb = parseFloat(form.mortgageBalance);
