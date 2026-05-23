@@ -31,7 +31,7 @@ const SCENARIOS = [
 ];
 
 export default function CalculatorForm() {
-  const { form, step, setField, setStep } = useStore();
+  const { form, step, setField, handleChange, setStep } = useStore();
 
   function field(
     key: keyof FormState,
@@ -55,11 +55,12 @@ export default function CalculatorForm() {
           )}
           <input
             type="number"
+            name={key}
             step={fieldStep}
             min="0"
             placeholder={placeholder}
             value={form[key]}
-            onChange={(e) => setField(key, e.target.value)}
+            onChange={handleChange}
             className="flex-1 py-2 px-3 bg-transparent text-zinc-900 dark:text-zinc-50 outline-none text-sm"
           />
           {suffix && (
@@ -154,13 +155,12 @@ export default function CalculatorForm() {
                   <div className="flex items-center gap-1">
                     <input
                       type="number"
+                      name="investmentReturn"
                       step="0.1"
                       min="0"
                       placeholder="—"
                       value={isCustom ? form.investmentReturn : ""}
-                      onChange={(e) =>
-                        setField("investmentReturn", e.target.value)
-                      }
+                      onChange={handleChange}
                       className="w-14 py-1 px-2 rounded border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-sm font-mono text-right outline-none focus:ring-1 focus:ring-zinc-500 text-zinc-900 dark:text-zinc-50"
                     />
                     <span className="text-sm text-zinc-500 dark:text-zinc-400">
