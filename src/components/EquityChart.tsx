@@ -30,12 +30,14 @@ function formatDollars(n: number) {
 }
 
 const START_YEAR = new Date().getFullYear();
-const START_MONTH = new Date().getMonth() + 3;
+const START_MONTH = new Date().getMonth();
 
 const YEAR_TICKS = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120];
 
 function formatTick(month: number) {
-  return String(START_YEAR + month / 12);
+  const d = new Date(START_YEAR, START_MONTH + month);
+  const mo = d.toLocaleString("en-CA", { month: "short" });
+  return `${mo} '${String(d.getFullYear()).slice(2)}`;
 }
 
 function formatMonthLabel(month: number) {

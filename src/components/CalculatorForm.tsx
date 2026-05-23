@@ -11,7 +11,7 @@ type Props = {
 
 const STEPS = [
   { title: "The Smith Maneuver" },
-  { title: "Expected Returns" },
+  { title: "Investment Returns" },
   { title: "Borrowing Costs" },
   { title: "Sizing" },
 ];
