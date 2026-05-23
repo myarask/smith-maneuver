@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   ComposedChart,
   Area,
@@ -11,7 +12,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import type { Snapshot } from "@/lib/smith-maneuver";
+import { useStore } from "@/store/useStore";
+import { getSimulationResults } from "@/lib/smith-maneuver";
+import { parseForm } from "@/lib/parseForm";
 
 function formatCompact(n: number) {
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -42,11 +45,19 @@ function formatMonthLabel(month: number) {
   return d.toLocaleDateString("en-CA", { month: "short", year: "numeric" });
 }
 
-export default function EquityChart({ snapshots }: { snapshots: Snapshot[] }) {
+export default function EquityChart() {
+  const { form } = useStore();
+  const results = useMemo(() => {
+    const parsed = parseForm(form);
+    return parsed ? getSimulationResults(parsed) : null;
+  }, [form]);
+
+  if (!results) return null;
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart
-        data={snapshots}
+        data={results.snapshots}
         margin={{ top: 4, right: 4, left: 8, bottom: 8 }}
       >
         <CartesianGrid

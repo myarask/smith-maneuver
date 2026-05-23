@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import CalculatorForm from "@/components/CalculatorForm";
-import ResultsSummary from "@/components/ResultsSummary";
+import EquityChart from "@/components/EquityChart";
 
 export default function Home() {
   const { setField } = useStore();
@@ -29,7 +29,9 @@ export default function Home() {
         <CalculatorForm />
       </div>
       <div className="flex-1 min-w-0 h-full">
-        <ResultsSummary />
+        <div className="h-full w-full">
+          <EquityChart />
+        </div>
       </div>
     </main>
   );
