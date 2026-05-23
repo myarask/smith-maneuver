@@ -12,7 +12,7 @@ export type Snapshot = {
   homeValue: number;
   mortgageBalance: number;
   helocBalance: number;
-  marginAccountValue: number;
+  marginBalance: number;
   cashPile: number;
   netEquity: number;
   cumulativeHelocRefund: number;
@@ -42,7 +42,7 @@ export function getSimulationResults({
   const initialDraw = helocCap / Math.pow(1 + monthlyRate, years * 12);
 
   let helocBalance = initialDraw;
-  let marginAccount = initialDraw;
+  let marginBalance = initialDraw;
   let cashPile = 0;
   let yearlyRefundAccum = 0;
   let cumulativeHelocRefund = 0;
@@ -52,8 +52,8 @@ export function getSimulationResults({
       month: 0,
       homeValue,
       mortgageBalance,
-      helocBalance: initialDraw,
-      marginAccountValue: initialDraw,
+      helocBalance,
+      marginBalance,
       cashPile: 0,
       netEquity: 0,
       cumulativeHelocRefund: 0,
@@ -64,7 +64,7 @@ export function getSimulationResults({
     const helocInterest = helocBalance * monthlyRate;
     helocBalance += helocInterest;
 
-    marginAccount = marginAccount * (1 + monthlyReturn);
+    marginBalance = marginBalance * (1 + monthlyReturn);
 
     const helocInterestRefund = helocInterest * marginalTaxRate;
     yearlyRefundAccum += helocInterestRefund;
@@ -80,9 +80,9 @@ export function getSimulationResults({
       homeValue,
       mortgageBalance,
       helocBalance,
-      marginAccountValue: marginAccount,
+      marginBalance: marginBalance,
       cashPile,
-      netEquity: marginAccount + cashPile - helocBalance,
+      netEquity: marginBalance + cashPile - helocBalance,
       cumulativeHelocRefund,
     });
   }

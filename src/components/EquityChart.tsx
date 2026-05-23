@@ -88,7 +88,7 @@ export default function EquityChart({ snapshots }: Props) {
         />
         <Area
           type="monotone"
-          dataKey="marginAccountValue"
+          dataKey="marginBalance"
           stackId="equity"
           name="Margin account"
           fill="#16a34a"
