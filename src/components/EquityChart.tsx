@@ -30,7 +30,7 @@ function formatDollars(n: number) {
 }
 
 const START_YEAR = new Date().getFullYear();
-const START_MONTH = new Date().getMonth();
+const START_MONTH = new Date().getMonth() + 3;
 
 const YEAR_TICKS = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120];
 

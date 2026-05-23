@@ -22,6 +22,8 @@ export type SimulationResults = {
   snapshots: Snapshot[];
 };
 
+const monthsUntilMay = 12 - new Date().getMonth() + 4; // 4 = May
+
 export function getSimulationResults({
   homeValue,
   mortgageBalance,
@@ -54,9 +56,9 @@ export function getSimulationResults({
       mortgageBalance,
       helocBalance,
       marginBalance,
-      cashPile: 0,
+      cashPile,
       netEquity: 0,
-      cumulativeHelocRefund: 0,
+      cumulativeHelocRefund,
     },
   ];
 
@@ -70,7 +72,8 @@ export function getSimulationResults({
     yearlyRefundAccum += helocInterestRefund;
     cumulativeHelocRefund += helocInterestRefund;
 
-    if (m % 12 === 0) {
+    // Assume the tax refund is received in May
+    if ((m + monthsUntilMay) % 12 === 0) {
       cashPile += yearlyRefundAccum;
       yearlyRefundAccum = 0;
     }
