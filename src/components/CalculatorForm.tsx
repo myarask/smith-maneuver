@@ -30,6 +30,34 @@ const SCENARIOS = [
   },
 ];
 
+function BackButton() {
+  const { step, setStep } = useStore();
+
+  return (
+    <button
+      onClick={() => setStep((s) => s - 1)}
+      disabled={step === 0}
+      className="text-sm font-medium text-zinc-500 dark:text-zinc-400 disabled:opacity-0 transition-opacity"
+    >
+      ← Back
+    </button>
+  );
+}
+
+function NextButton() {
+  const { step, setStep } = useStore();
+  if (step >= STEPS.length - 1) return null;
+
+  return (
+    <button
+      onClick={() => setStep((s) => s + 1)}
+      className="text-sm font-medium bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 px-4 py-1.5 rounded-md"
+    >
+      {step === 0 ? "Show me" : "Next →"}
+    </button>
+  );
+}
+
 export default function CalculatorForm() {
   const { form, step, setField, handleChange, setStep } = useStore();
 
@@ -330,21 +358,8 @@ export default function CalculatorForm() {
       <div className="flex flex-col gap-4">{stepFields()}</div>
 
       <div className="flex items-center justify-between pt-1">
-        <button
-          onClick={() => setStep((s) => s - 1)}
-          disabled={step === 0}
-          className="text-sm font-medium text-zinc-500 dark:text-zinc-400 disabled:opacity-0 transition-opacity"
-        >
-          ← Back
-        </button>
-        {step < STEPS.length - 1 && (
-          <button
-            onClick={() => setStep((s) => s + 1)}
-            className="text-sm font-medium bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 px-4 py-1.5 rounded-md"
-          >
-            {step === 0 ? "Show me" : "Next →"}
-          </button>
-        )}
+        <BackButton />
+        <NextButton />
       </div>
     </div>
   );
