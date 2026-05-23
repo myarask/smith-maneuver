@@ -85,13 +85,18 @@ export default function CalculatorForm({ form, onChange }: Props) {
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Canadians with unused home equity can boost their savings by using a
+            combination of tax refunds and leverage. This is known as the Smith
+            Maneuver.
+          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             In Canada, the interest on a loan used to invest in income-producing
             assets (like stocks or ETFs) is tax-deductible.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             By borrowing to invest, you can benefit from compounding returns of
-            both your investments and tax refunds, boosting your savings over
-            time.
+            both your investments and tax refunds, creating wealth at no
+            additional cost.
           </p>
         </>
       );
@@ -177,7 +182,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Estimate your cost to borrow. Your marginal tax rate affects how
+            Estimate your cost to borrow. Your marginal tax rate determines how
             much of the interest will be refunded to you annually.
           </p>
           {field(
@@ -198,6 +203,32 @@ export default function CalculatorForm({ form, onChange }: Props) {
             "0.01",
             "Your combined federal + provincial rate",
           )}
+          {(() => {
+            const rate = parseFloat(form.interestRate);
+            const tax = parseFloat(form.marginalTaxRate);
+            if (isNaN(rate) || isNaN(tax)) return null;
+            const effective = (rate * (1 - tax / 100)).toFixed(2);
+            return (
+              <div className="flex flex-col gap-1">
+                <hr className="border-t border-zinc-200 dark:border-zinc-700 my-3" />
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                  Effective interest rate
+                </label>
+                <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
+                  <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
+                    {effective}
+                  </span>
+                  <span className="text-sm text-zinc-400 dark:text-zinc-500 select-none">
+                    %
+                  </span>
+                </div>
+
+                <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                  This is your true cost to borrow after tax refunds.
+                </p>
+              </div>
+            );
+          })()}
         </>
       );
     if (step === 3)
