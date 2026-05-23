@@ -175,6 +175,7 @@ export function calculateCapitalizingSmithManeuver(
   let helocBalance = initialDraw;
   let marginAccount = initialDraw;
   let cashPile = 0;
+  let yearlyRefundAccum = 0;
   let cumulativeHelocRefund = 0;
 
   const snapshots: CapitalizingYearlySnapshot[] = [
@@ -197,8 +198,13 @@ export function calculateCapitalizingSmithManeuver(
     marginAccount = marginAccount * (1 + monthlyReturn);
 
     const helocInterestRefund = helocInterest * marginalTaxRate;
-    cashPile += helocInterestRefund;
+    yearlyRefundAccum += helocInterestRefund;
     cumulativeHelocRefund += helocInterestRefund;
+
+    if (m % 12 === 0) {
+      cashPile += yearlyRefundAccum;
+      yearlyRefundAccum = 0;
+    }
 
     snapshots.push({
       month: m,

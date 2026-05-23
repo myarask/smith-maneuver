@@ -71,7 +71,7 @@ export default function EquityChart({ snapshots }: Props) {
         />
         <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
         <Area
-          type="monotone"
+          type="linear"
           dataKey="cashPile"
           stackId="equity"
           name="Cash refunds"
