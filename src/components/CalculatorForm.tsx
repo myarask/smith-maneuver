@@ -31,11 +31,11 @@ const SCENARIOS = [
 ];
 
 function BackButton() {
-  const { step, setStep } = useStore();
+  const { step, handleBack } = useStore();
 
   return (
     <button
-      onClick={() => setStep((s) => s - 1)}
+      onClick={handleBack}
       disabled={step === 0}
       className="text-sm font-medium text-zinc-500 dark:text-zinc-400 disabled:opacity-0 transition-opacity"
     >
@@ -45,12 +45,12 @@ function BackButton() {
 }
 
 function NextButton() {
-  const { step, setStep } = useStore();
+  const { step, handleNext } = useStore();
   if (step >= STEPS.length - 1) return null;
 
   return (
     <button
-      onClick={() => setStep((s) => s + 1)}
+      onClick={handleNext}
       className="text-sm font-medium bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 px-4 py-1.5 rounded-md"
     >
       {step === 0 ? "Show me" : "Next →"}
@@ -59,7 +59,7 @@ function NextButton() {
 }
 
 export default function CalculatorForm() {
-  const { form, step, setField, handleChange, setStep } = useStore();
+  const { form, step, setField, handleChange, handleJump } = useStore();
 
   function field(
     key: keyof FormState,
@@ -334,7 +334,7 @@ export default function CalculatorForm() {
               />
             )}
             <button
-              onClick={() => setStep(i)}
+              onClick={() => handleJump(i)}
               className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-colors ${
                 i === step
                   ? "bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900"

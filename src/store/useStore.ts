@@ -8,7 +8,9 @@ interface CalculatorStore {
   step: number;
   setField: (key: keyof FormState, value: string) => void;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  setStep: (updater: number | ((prev: number) => number)) => void;
+  handleNext: () => void;
+  handleBack: () => void;
+  handleJump: (step: number) => void;
 }
 
 export const useStore = create<CalculatorStore>((set) => ({
@@ -20,8 +22,7 @@ export const useStore = create<CalculatorStore>((set) => ({
     set((state) => ({
       form: { ...state.form, [e.target.name]: e.target.value },
     })),
-  setStep: (updater) =>
-    set((state) => ({
-      step: typeof updater === "function" ? updater(state.step) : updater,
-    })),
+  handleNext: () => set((state) => ({ step: state.step + 1 })),
+  handleBack: () => set((state) => ({ step: state.step - 1 })),
+  handleJump: (step) => set({ step }),
 }));
