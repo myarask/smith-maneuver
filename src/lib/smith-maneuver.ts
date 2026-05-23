@@ -5,6 +5,7 @@ export type SimulationInputs = {
   investmentReturn: number;
   marginalTaxRate: number;
   years: number;
+  readvancable: boolean;
 };
 
 export type Snapshot = {
@@ -31,6 +32,7 @@ export function getSimulationResults({
   investmentReturn,
   marginalTaxRate,
   years,
+  readvancable,
 }: SimulationInputs): SimulationResults {
   const helocCap = Math.max(
     Math.min(0.8 * homeValue - mortgageBalance, 0.65 * homeValue),
@@ -40,8 +42,9 @@ export function getSimulationResults({
   const monthlyRate = interestRate / 12;
   const monthlyReturn = investmentReturn / 12;
 
-  // Size the initial draw so monthly-compounding over years*12 months hits helocCap exactly
-  const initialDraw = helocCap / Math.pow(1 + monthlyRate, years * 12);
+  const initialDraw = readvancable
+    ? helocCap
+    : helocCap / Math.pow(1 + monthlyRate, years * 12);
 
   let helocBalance = initialDraw;
   let marginBalance = initialDraw;

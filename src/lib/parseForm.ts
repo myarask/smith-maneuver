@@ -32,5 +32,6 @@ export function parseForm(form: FormState): SimulationInputs | null {
     investmentReturn,
     marginalTaxRate,
     years: 10,
+    readvancable: form.readvancable,
   };
 }
