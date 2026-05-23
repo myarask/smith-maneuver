@@ -1,13 +1,8 @@
 "use client";
 
 import { useState, Fragment } from "react";
-import { DEFAULTS, FormState } from "@/app/page";
-
-type Props = {
-  form: FormState;
-  onChange: (key: keyof FormState, value: string) => void;
-  interestRateHint?: string;
-};
+import { DEFAULTS } from "@/app/page";
+import { FormState } from "@/global/types";
 
 const STEPS = [
   { title: "The Smith Maneuver" },
@@ -34,7 +29,14 @@ const SCENARIOS = [
   },
 ];
 
-export default function CalculatorForm({ form, onChange }: Props) {
+export default function CalculatorForm({
+  form,
+  onChange,
+}: {
+  form: FormState;
+  onChange: (key: keyof FormState, value: string) => void;
+  interestRateHint?: string;
+}) {
   const [step, setStep] = useState(0);
 
   function field(

@@ -3,15 +3,9 @@
 import { useState, useMemo, useEffect } from "react";
 import CalculatorForm from "@/components/CalculatorForm";
 import ResultsSummary from "@/components/ResultsSummary";
-import { getSimulationResults, SimulationInputs } from "@/lib/smith-maneuver";
-
-export type FormState = {
-  homeValue: string;
-  mortgageBalance: string;
-  interestRate: string;
-  investmentReturn: string;
-  marginalTaxRate: string;
-};
+import { getSimulationResults } from "@/lib/smith-maneuver";
+import { parseForm } from "@/lib/parseForm";
+import { FormState } from "@/global/types";
 
 export const DEFAULTS: FormState = {
   homeValue: "700000",
@@ -20,40 +14,6 @@ export const DEFAULTS: FormState = {
   investmentReturn: "8.0",
   marginalTaxRate: "43.0",
 };
-
-function parseForm(form: FormState): SimulationInputs | null {
-  const homeValue = parseFloat(form.homeValue);
-  const mortgageBalance = parseFloat(form.mortgageBalance);
-  const interestRate = parseFloat(form.interestRate) / 100;
-  const investmentReturn = parseFloat(form.investmentReturn) / 100;
-  const marginalTaxRate = parseFloat(form.marginalTaxRate) / 100;
-  if (
-    isNaN(homeValue) ||
-    homeValue <= 0 ||
-    isNaN(mortgageBalance) ||
-    mortgageBalance <= 0 ||
-    isNaN(interestRate) ||
-    interestRate <= 0 ||
-    interestRate >= 1 ||
-    isNaN(investmentReturn) ||
-    investmentReturn <= 0 ||
-    investmentReturn >= 1 ||
-    isNaN(marginalTaxRate) ||
-    marginalTaxRate <= 0 ||
-    marginalTaxRate >= 1
-  ) {
-    return null;
-  }
-
-  return {
-    homeValue,
-    mortgageBalance,
-    interestRate,
-    investmentReturn,
-    marginalTaxRate,
-    years: 10,
-  };
-}
 
 export default function Home() {
   const [form, setForm] = useState<FormState>(DEFAULTS);
