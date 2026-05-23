@@ -25,10 +25,7 @@ export type SmithManeuverResult = {
 
 export type CapitalizingSmithManeuverInputs = {
   homeValue: number;
-  appreciationRate: number;
   mortgageBalance: number;
-  mortgageRate: number;
-  amortizationYears: number;
   interestRate: number;
   investmentReturn: number;
   marginalTaxRate: number;
@@ -164,46 +161,30 @@ export function calculateSmithManeuver(
 export function calculateCapitalizingSmithManeuver(
   inputs: CapitalizingSmithManeuverInputs,
 ): CapitalizingSmithManeuverResult {
-  const {
-    homeValue: initialHomeValue,
-    appreciationRate,
-    mortgageBalance: initialMortgageBalance,
-    mortgageRate,
-    amortizationYears,
-    interestRate,
-    investmentReturn,
-    marginalTaxRate,
-    years,
-  } = inputs;
+  const { homeValue, mortgageBalance, interestRate, investmentReturn, marginalTaxRate, years } = inputs;
 
-  const r = mortgageRate / 12;
-  const payment = fixedMonthlyPayment(
-    initialMortgageBalance,
-    mortgageRate,
-    amortizationYears * 12,
-  );
-
-  const initialHelocCap = Math.max(
-    Math.min(
-      0.8 * initialHomeValue - initialMortgageBalance,
-      0.65 * initialHomeValue,
-    ),
+  const helocCap = Math.max(
+    Math.min(0.8 * homeValue - mortgageBalance, 0.65 * homeValue),
     0,
   );
 
-  let mortgage = initialMortgageBalance;
-  let helocBalance = initialHelocCap;
-  let marginAccount = initialHelocCap;
+  // Size the initial draw so compounding interest never exceeds helocCap:
+  // helocBalance at year n = initialDraw × (1 + r)^n, set equal to helocCap at n = years
+  const initialDraw = helocCap / Math.pow(1 + interestRate, years);
+
+  let helocBalance = initialDraw;
+  let marginAccount = initialDraw;
   let rrsp = 0;
   let cumulativeHelocRefund = 0;
   let cumulativeRrspRefund = 0;
+
   const yearlySnapshots: CapitalizingYearlySnapshot[] = [
     {
       year: 0,
-      homeValue: initialHomeValue,
-      mortgageBalance: initialMortgageBalance,
-      helocBalance: initialHelocCap,
-      marginAccountValue: initialHelocCap,
+      homeValue,
+      mortgageBalance,
+      helocBalance: initialDraw,
+      marginAccountValue: initialDraw,
       rrspValue: 0,
       netEquity: 0,
       cumulativeHelocRefund: 0,
@@ -212,29 +193,8 @@ export function calculateCapitalizingSmithManeuver(
   ];
 
   for (let year = 1; year <= years; year++) {
-    // Amortize mortgage for 12 months
-    for (let m = 0; m < 12; m++) {
-      if (mortgage > 0.01) {
-        const interest = mortgage * r;
-        const principal = Math.min(payment - interest, mortgage);
-        mortgage = Math.max(mortgage - principal, 0);
-      }
-    }
-
-    const homeValue = initialHomeValue * Math.pow(1 + appreciationRate, year);
-    const helocCap = Math.max(
-      Math.min(0.8 * homeValue - mortgage, 0.65 * homeValue),
-      0,
-    );
-
-    // Capitalize HELOC interest (capped at HELOC limit)
     const helocInterest = helocBalance * interestRate;
-    helocBalance = Math.min(helocBalance + helocInterest, helocCap);
-
-    // Draw remaining new room and invest
-    const newRoom = Math.max(helocCap - helocBalance, 0);
-    marginAccount += newRoom;
-    helocBalance = helocCap;
+    helocBalance += helocInterest;
 
     marginAccount = marginAccount * (1 + investmentReturn);
 
@@ -251,7 +211,7 @@ export function calculateCapitalizingSmithManeuver(
     yearlySnapshots.push({
       year,
       homeValue,
-      mortgageBalance: mortgage,
+      mortgageBalance,
       helocBalance,
       marginAccountValue: marginAccount,
       rrspValue: rrsp,

@@ -246,35 +246,11 @@ export default function CalculatorForm({ form, onChange }: Props) {
             "1",
           )}
           {field(
-            "appreciationRate",
-            "Home appreciation rate",
-            undefined,
-            "%",
-            DEFAULTS.appreciationRate,
-            "0.1",
-            "Typical: 2–5% annually",
-          )}
-          {field(
             "mortgageBalance",
             "Mortgage balance",
             "$",
             undefined,
             DEFAULTS.mortgageBalance,
-            "1",
-          )}
-          {field(
-            "mortgageRate",
-            "Mortgage interest rate",
-            undefined,
-            "%",
-            DEFAULTS.mortgageRate,
-          )}
-          {field(
-            "amortizationYears",
-            "Amortization remaining",
-            undefined,
-            "years",
-            DEFAULTS.amortizationYears,
             "1",
           )}
         </>
