@@ -13,7 +13,7 @@ const STEPS = [
   { title: "The Smith Maneuver" },
   { title: "Expected Returns" },
   { title: "Borrowing Costs" },
-  { title: "Property & Mortgage" },
+  { title: "Sizing" },
 ];
 
 const SCENARIOS = [
@@ -90,7 +90,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             In Canada, the interest on a loan used to invest in income-producing
-            assets (like stocks or ETFs) is tax-deductible.
+            assets, like dividend stocks and ETFs, is tax-deductible.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             By borrowing to invest, you can benefit from compounding returns of
@@ -234,12 +234,13 @@ export default function CalculatorForm({ form, onChange }: Props) {
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Estimate your cost to borrow. Your marginal tax rate determines how
-            much of the interest will be refunded to you annually.
+            The amount that you can borrow in a HELOC is limited by your home
+            equity. Borrowing an amount below the maximum allows interest to be
+            charged directly to the HELOC.
           </p>
           {field(
             "homeValue",
-            "Home appraised value",
+            "Home value",
             "$",
             undefined,
             DEFAULTS.homeValue,
@@ -253,6 +254,47 @@ export default function CalculatorForm({ form, onChange }: Props) {
             DEFAULTS.mortgageBalance,
             "1",
           )}
+          {(() => {
+            const hv = parseFloat(form.homeValue);
+            const mb = parseFloat(form.mortgageBalance);
+            const ir = parseFloat(form.interestRate) / 100;
+            if (isNaN(hv) || isNaN(mb) || isNaN(ir)) return null;
+            const helocCap = Math.max(Math.min(0.8 * hv - mb, 0.65 * hv), 0);
+            const initialDraw = helocCap / Math.pow(1 + ir, 10);
+            const fmt = (n: number) =>
+              "$" + Math.round(n).toLocaleString("en-CA");
+            return (
+              <>
+                <hr className="border-t border-zinc-200 dark:border-zinc-700 my-3" />
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    HELOC limit
+                  </label>
+                  <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
+                    <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
+                      {fmt(helocCap)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                    The most you can borrow.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Initial investment
+                  </label>
+                  <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
+                    <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
+                      {fmt(initialDraw)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                    Leave room in the HELOC for 10 years of interest.
+                  </p>
+                </div>
+              </>
+            );
+          })()}
         </>
       );
   }
