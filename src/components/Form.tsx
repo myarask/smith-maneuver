@@ -8,6 +8,7 @@ import {
   handleBack,
   handleNext,
   handleJump,
+  setReadvancable,
 } from "@/global/store";
 import { DEFAULTS } from "@/global/constants";
 import { Field } from "./Field";
@@ -17,6 +18,7 @@ const STEPS = [
   { title: "Investment Returns" },
   { title: "Borrowing Costs" },
   { title: "Sizing" },
+  { title: "Readvancable Mortgage" },
 ];
 
 const SCENARIOS = [
@@ -276,6 +278,73 @@ export function Form() {
                   </div>
                   <p className="text-xs text-zinc-400 dark:text-zinc-500">
                     Leave room in the HELOC for 10 years of interest.
+                  </p>
+                </div>
+              </>
+            );
+          })()}
+        </>
+      );
+    if (step === 4)
+      return (
+        <>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            A readvancable mortgage combines your mortgage and HELOC in one
+            product. Each time you make a mortgage payment, the principal
+            portion immediately reopens as available HELOC credit.
+          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            This means you can invest your full HELOC limit from day one.
+            Instead of leaving room for accumulated interest, the mortgage
+            principal repayments continuously replenish the available credit.
+          </p>
+          <button
+            type="button"
+            onClick={() => setReadvancable(!form.readvancable)}
+            className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-left transition-colors ${
+              form.readvancable
+                ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800"
+                : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-zinc-400 dark:hover:border-zinc-500"
+            }`}
+          >
+            <div className="flex flex-col gap-0.5">
+              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                Use a readvancable mortgage
+              </span>
+            </div>
+            <input
+              type="checkbox"
+              checked={form.readvancable}
+              onChange={(e) => setReadvancable(e.target.checked)}
+              className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 accent-zinc-900 dark:accent-zinc-50"
+            />
+          </button>
+          {(() => {
+            const hv = parseFloat(form.homeValue);
+            const mb = parseFloat(form.mortgageBalance);
+            const ir = parseFloat(form.interestRate) / 100;
+            if (isNaN(hv) || isNaN(mb) || isNaN(ir)) return null;
+            const helocCap = Math.max(Math.min(0.8 * hv - mb, 0.65 * hv), 0);
+            const standardDraw = helocCap / Math.pow(1 + ir / 12, 10 * 12);
+            const readvancableDraw = helocCap;
+            const fmt = (n: number) =>
+              "$" + Math.round(n).toLocaleString("en-CA");
+            return (
+              <>
+                <hr className="border-t border-zinc-200 dark:border-zinc-700 my-3" />
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Initial investment
+                  </label>
+                  <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
+                    <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
+                      {fmt(form.readvancable ? readvancableDraw : standardDraw)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                    {form.readvancable
+                      ? "Invest the full HELOC limit from day one."
+                      : "Leave room in the HELOC for 10 years of interest."}
                   </p>
                 </div>
               </>

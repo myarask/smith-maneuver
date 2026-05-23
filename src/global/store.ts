@@ -29,3 +29,6 @@ export const handleBack = () =>
 
 export const handleJump = (step: number) =>
   useStore.setState({ step });
+
+export const setReadvancable = (value: boolean) =>
+  useStore.setState((s) => ({ form: { ...s.form, readvancable: value } }));

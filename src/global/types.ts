@@ -4,4 +4,5 @@ export type FormState = {
   interestRate: string;
   investmentReturn: string;
   marginalTaxRate: string;
+  readvancable: boolean;
 };
