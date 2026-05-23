@@ -12,7 +12,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { useStore } from "@/store/useStore";
+import { useStore } from "@/global/store";
 import { getSimulationResults } from "@/lib/smith-maneuver";
 import { parseForm } from "@/lib/parseForm";
 

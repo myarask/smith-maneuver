@@ -1,7 +1,14 @@
 "use client";
 
 import { Fragment } from "react";
-import { useStore, setField, handleChange, handleBack, handleNext, handleJump } from "@/store/useStore";
+import {
+  useStore,
+  setField,
+  handleChange,
+  handleBack,
+  handleNext,
+  handleJump,
+} from "@/global/store";
 import { DEFAULTS } from "@/global/constants";
 import { FormState } from "@/global/types";
 

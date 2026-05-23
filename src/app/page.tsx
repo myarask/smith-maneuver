@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { setField } from "@/store/useStore";
+import { setField } from "@/global/store";
 import CalculatorForm from "@/components/CalculatorForm";
 import EquityChart from "@/components/EquityChart";
 
