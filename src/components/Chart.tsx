@@ -45,7 +45,7 @@ function formatMonthLabel(month: number) {
   return d.toLocaleDateString("en-CA", { month: "short", year: "numeric" });
 }
 
-export function EquityChart() {
+export function Chart() {
   const { form } = useStore();
   const results = useMemo(() => {
     const parsed = parseForm(form);

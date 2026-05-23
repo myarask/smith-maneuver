@@ -65,7 +65,7 @@ function NextButton() {
   );
 }
 
-export function CalculatorForm() {
+export function Form() {
   const { form, step } = useStore();
 
   function stepFields() {
