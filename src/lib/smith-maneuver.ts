@@ -23,7 +23,7 @@ export type SimulationResults = {
   snapshots: Snapshot[];
 };
 
-const monthsUntilMay = 12 - new Date().getMonth() + 4; // 4 = May
+import { MONTHS_UNTIL_MAY } from "@/global/constants";
 
 export function getSimulationResults({
   homeValue,
@@ -76,7 +76,7 @@ export function getSimulationResults({
     cumulativeHelocRefund += helocInterestRefund;
 
     // Assume the tax refund is received in May
-    if ((m + monthsUntilMay) % 12 === 0) {
+    if ((m + MONTHS_UNTIL_MAY) % 12 === 0) {
       cashPile += yearlyRefundAccum;
       yearlyRefundAccum = 0;
     }
