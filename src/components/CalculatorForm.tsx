@@ -13,8 +13,7 @@ const STEPS = [
   { title: "The Smith Maneuver" },
   { title: "Expected Returns" },
   { title: "Borrowing Costs" },
-  { title: "Property" },
-  { title: "Mortgage" },
+  { title: "Property & Mortgage" },
 ];
 
 const SCENARIOS = [
@@ -234,6 +233,10 @@ export default function CalculatorForm({ form, onChange }: Props) {
     if (step === 3)
       return (
         <>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Estimate your cost to borrow. Your marginal tax rate determines how
+            much of the interest will be refunded to you annually.
+          </p>
           {field(
             "homeValue",
             "Home appraised value",
@@ -251,11 +254,6 @@ export default function CalculatorForm({ form, onChange }: Props) {
             "0.1",
             "Typical: 2–5% annually",
           )}
-        </>
-      );
-    if (step === 4)
-      return (
-        <>
           {field(
             "mortgageBalance",
             "Mortgage balance",
