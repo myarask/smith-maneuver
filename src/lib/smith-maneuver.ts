@@ -154,7 +154,14 @@ export function calculateSmithManeuver(
 export function calculateCapitalizingSmithManeuver(
   inputs: CapitalizingSmithManeuverInputs,
 ): CapitalizingSmithManeuverResult {
-  const { homeValue, mortgageBalance, interestRate, investmentReturn, marginalTaxRate, years } = inputs;
+  const {
+    homeValue,
+    mortgageBalance,
+    interestRate,
+    investmentReturn,
+    marginalTaxRate,
+    years,
+  } = inputs;
 
   const helocCap = Math.max(
     Math.min(0.8 * homeValue - mortgageBalance, 0.65 * homeValue),
