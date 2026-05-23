@@ -3,7 +3,6 @@
 import { useState, useMemo, useEffect } from "react";
 import CalculatorForm from "@/components/CalculatorForm";
 import ResultsSummary from "@/components/ResultsSummary";
-import StatsFooter from "@/components/StatsFooter";
 import {
   calculateCapitalizingSmithManeuver,
   CapitalizingSmithManeuverInputs,
@@ -98,9 +97,6 @@ export default function Home() {
             <CalculatorForm form={form} onChange={handleChange} />
           </div>
         </div>
-      </div>
-      <div className="w-full flex justify-center px-4 pb-16">
-        <StatsFooter results={results} />
       </div>
     </main>
   );

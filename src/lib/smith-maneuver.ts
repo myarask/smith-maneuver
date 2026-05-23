@@ -44,11 +44,6 @@ export type CapitalizingYearlySnapshot = {
 };
 
 export type CapitalizingSmithManeuverResult = {
-  helocBalance: number;
-  marginAccountValue: number;
-  cashPile: number;
-  netEquity: number;
-  cumulativeHelocRefund: number;
   snapshots: CapitalizingYearlySnapshot[];
 };
 
@@ -218,12 +213,5 @@ export function calculateCapitalizingSmithManeuver(
     });
   }
 
-  return {
-    helocBalance,
-    marginAccountValue: marginAccount,
-    cashPile,
-    netEquity: marginAccount + cashPile - helocBalance,
-    cumulativeHelocRefund,
-    snapshots,
-  };
+  return { snapshots };
 }
