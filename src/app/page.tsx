@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { setField } from "@/global/store";
-import CalculatorForm from "@/components/CalculatorForm";
-import EquityChart from "@/components/EquityChart";
+import { CalculatorForm } from "@/components/CalculatorForm";
+import { EquityChart } from "@/components/EquityChart";
 
 export default function Home() {
   useEffect(() => {

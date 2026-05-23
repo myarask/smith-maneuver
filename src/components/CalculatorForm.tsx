@@ -10,7 +10,7 @@ import {
   handleJump,
 } from "@/global/store";
 import { DEFAULTS } from "@/global/constants";
-import Field from "./Field";
+import { Field } from "./Field";
 
 const STEPS = [
   { title: "The Smith Maneuver" },
@@ -65,7 +65,7 @@ function NextButton() {
   );
 }
 
-export default function CalculatorForm() {
+export function CalculatorForm() {
   const { form, step } = useStore();
 
   function stepFields() {

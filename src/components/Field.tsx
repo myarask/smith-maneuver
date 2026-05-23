@@ -14,7 +14,7 @@ interface FieldProps {
   hint?: string;
 }
 
-export default function Field({
+export function Field({
   name,
   label,
   value,
