@@ -38,19 +38,17 @@ export type CapitalizingYearlySnapshot = {
   mortgageBalance: number;
   helocBalance: number;
   marginAccountValue: number;
-  rrspValue: number;
+  cashPile: number;
   netEquity: number;
   cumulativeHelocRefund: number;
-  cumulativeRrspRefund: number;
 };
 
 export type CapitalizingSmithManeuverResult = {
   helocBalance: number;
   marginAccountValue: number;
-  rrspValue: number;
+  cashPile: number;
   netEquity: number;
   cumulativeHelocRefund: number;
-  cumulativeRrspRefund: number;
   yearlySnapshots: CapitalizingYearlySnapshot[];
 };
 
@@ -174,9 +172,8 @@ export function calculateCapitalizingSmithManeuver(
 
   let helocBalance = initialDraw;
   let marginAccount = initialDraw;
-  let rrsp = 0;
+  let cashPile = 0;
   let cumulativeHelocRefund = 0;
-  let cumulativeRrspRefund = 0;
 
   const yearlySnapshots: CapitalizingYearlySnapshot[] = [
     {
@@ -185,10 +182,9 @@ export function calculateCapitalizingSmithManeuver(
       mortgageBalance,
       helocBalance: initialDraw,
       marginAccountValue: initialDraw,
-      rrspValue: 0,
+      cashPile: 0,
       netEquity: 0,
       cumulativeHelocRefund: 0,
-      cumulativeRrspRefund: 0,
     },
   ];
 
@@ -199,14 +195,8 @@ export function calculateCapitalizingSmithManeuver(
     marginAccount = marginAccount * (1 + investmentReturn);
 
     const helocInterestRefund = helocInterest * marginalTaxRate;
-    const rrspRefundContribution =
-      (helocInterestRefund * marginalTaxRate) / (1 - marginalTaxRate);
-    rrsp =
-      rrsp * (1 + investmentReturn) +
-      helocInterestRefund +
-      rrspRefundContribution;
+    cashPile += helocInterestRefund;
     cumulativeHelocRefund += helocInterestRefund;
-    cumulativeRrspRefund += rrspRefundContribution;
 
     yearlySnapshots.push({
       year,
@@ -214,20 +204,18 @@ export function calculateCapitalizingSmithManeuver(
       mortgageBalance,
       helocBalance,
       marginAccountValue: marginAccount,
-      rrspValue: rrsp,
-      netEquity: marginAccount + rrsp - helocBalance,
+      cashPile,
+      netEquity: marginAccount + cashPile - helocBalance,
       cumulativeHelocRefund,
-      cumulativeRrspRefund,
     });
   }
 
   return {
     helocBalance,
     marginAccountValue: marginAccount,
-    rrspValue: rrsp,
-    netEquity: marginAccount + rrsp - helocBalance,
+    cashPile,
+    netEquity: marginAccount + cashPile - helocBalance,
     cumulativeHelocRefund,
-    cumulativeRrspRefund,
     yearlySnapshots,
   };
 }

@@ -30,13 +30,13 @@ export default function StatsFooter({ results }: Props) {
   const isPositive = results ? results.netEquity >= 0 : null;
 
   return (
-    <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1fr] gap-3 w-full max-w-6xl">
+    <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-3 w-full max-w-6xl">
       <div className={`flex flex-col gap-1 rounded-xl border p-3 bg-white dark:bg-zinc-900 ${results ? (isPositive ? "border-green-300 dark:border-green-800" : "border-red-300 dark:border-red-800") : "border-zinc-200 dark:border-zinc-800"}`}>
         <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Net equity</p>
         <p className={`text-2xl font-bold ${results ? (isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400") : "text-zinc-300 dark:text-zinc-700"}`}>
           {results ? formatDollars(results.netEquity) : "—"}
         </p>
-        {results && <p className="text-xs text-zinc-500 dark:text-zinc-400">margin + RRSP − HELOC</p>}
+        {results && <p className="text-xs text-zinc-500 dark:text-zinc-400">margin + cash − HELOC</p>}
       </div>
       <StatCard
         label="HELOC balance"
@@ -53,23 +53,16 @@ export default function StatsFooter({ results }: Props) {
         valueColor={results ? "text-green-700 dark:text-green-400" : undefined}
       />
       <StatCard
-        label="RRSP value"
-        value={results ? formatDollars(results.rrspValue) : "—"}
-        sub={results ? "both refund streams compounded" : undefined}
+        label="Cash refunds"
+        value={results ? formatDollars(results.cashPile) : "—"}
+        sub={results ? "CRA refunds accumulated in cash" : undefined}
         accent={results ? "border-green-200 dark:border-green-900" : undefined}
         valueColor={results ? "text-green-700 dark:text-green-400" : undefined}
       />
       <StatCard
         label="HELOC refunds"
         value={results ? formatDollars(results.cumulativeHelocRefund) : "—"}
-        sub={results ? "interest deduction refunds contributed" : undefined}
-        accent={results ? "border-blue-200 dark:border-blue-900" : undefined}
-        valueColor={results ? "text-blue-700 dark:text-blue-400" : undefined}
-      />
-      <StatCard
-        label="RRSP refunds"
-        value={results ? formatDollars(results.cumulativeRrspRefund) : "—"}
-        sub={results ? "RRSP deduction refunds reinvested" : undefined}
+        sub={results ? "interest deduction refunds received" : undefined}
         accent={results ? "border-blue-200 dark:border-blue-900" : undefined}
         valueColor={results ? "text-blue-700 dark:text-blue-400" : undefined}
       />

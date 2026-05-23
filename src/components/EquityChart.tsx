@@ -66,9 +66,9 @@ export default function EquityChart({ snapshots }: Props) {
         />
         <Area
           type="monotone"
-          dataKey="rrspValue"
+          dataKey="cashPile"
           stackId="equity"
-          name="RRSP"
+          name="Cash refunds"
           fill="#86efac"
           stroke="#86efac"
           fillOpacity={0.75}
