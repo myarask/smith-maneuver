@@ -33,7 +33,7 @@ export type CapitalizingSmithManeuverInputs = {
 };
 
 export type CapitalizingYearlySnapshot = {
-  year: number;
+  month: number;
   homeValue: number;
   mortgageBalance: number;
   helocBalance: number;
@@ -49,7 +49,7 @@ export type CapitalizingSmithManeuverResult = {
   cashPile: number;
   netEquity: number;
   cumulativeHelocRefund: number;
-  yearlySnapshots: CapitalizingYearlySnapshot[];
+  snapshots: CapitalizingYearlySnapshot[];
 };
 
 function fixedMonthlyPayment(
@@ -166,18 +166,20 @@ export function calculateCapitalizingSmithManeuver(
     0,
   );
 
-  // Size the initial draw so compounding interest never exceeds helocCap:
-  // helocBalance at year n = initialDraw × (1 + r)^n, set equal to helocCap at n = years
-  const initialDraw = helocCap / Math.pow(1 + interestRate, years);
+  const monthlyRate = interestRate / 12;
+  const monthlyReturn = investmentReturn / 12;
+
+  // Size the initial draw so monthly-compounding over years*12 months hits helocCap exactly
+  const initialDraw = helocCap / Math.pow(1 + monthlyRate, years * 12);
 
   let helocBalance = initialDraw;
   let marginAccount = initialDraw;
   let cashPile = 0;
   let cumulativeHelocRefund = 0;
 
-  const yearlySnapshots: CapitalizingYearlySnapshot[] = [
+  const snapshots: CapitalizingYearlySnapshot[] = [
     {
-      year: 0,
+      month: 0,
       homeValue,
       mortgageBalance,
       helocBalance: initialDraw,
@@ -188,18 +190,18 @@ export function calculateCapitalizingSmithManeuver(
     },
   ];
 
-  for (let year = 1; year <= years; year++) {
-    const helocInterest = helocBalance * interestRate;
+  for (let m = 1; m <= years * 12; m++) {
+    const helocInterest = helocBalance * monthlyRate;
     helocBalance += helocInterest;
 
-    marginAccount = marginAccount * (1 + investmentReturn);
+    marginAccount = marginAccount * (1 + monthlyReturn);
 
     const helocInterestRefund = helocInterest * marginalTaxRate;
     cashPile += helocInterestRefund;
     cumulativeHelocRefund += helocInterestRefund;
 
-    yearlySnapshots.push({
-      year,
+    snapshots.push({
+      month: m,
       homeValue,
       mortgageBalance,
       helocBalance,
@@ -216,6 +218,6 @@ export function calculateCapitalizingSmithManeuver(
     cashPile,
     netEquity: marginAccount + cashPile - helocBalance,
     cumulativeHelocRefund,
-    yearlySnapshots,
+    snapshots,
   };
 }

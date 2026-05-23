@@ -260,7 +260,7 @@ export default function CalculatorForm({ form, onChange }: Props) {
             const ir = parseFloat(form.interestRate) / 100;
             if (isNaN(hv) || isNaN(mb) || isNaN(ir)) return null;
             const helocCap = Math.max(Math.min(0.8 * hv - mb, 0.65 * hv), 0);
-            const initialDraw = helocCap / Math.pow(1 + ir, 10);
+            const initialDraw = helocCap / Math.pow(1 + ir / 12, 10 * 12);
             const fmt = (n: number) =>
               "$" + Math.round(n).toLocaleString("en-CA");
             return (

@@ -12,7 +12,7 @@ export default function ResultsSummary({ results }: Props) {
 
   return (
     <div className="h-full w-full">
-      <EquityChart snapshots={results.yearlySnapshots} />
+      <EquityChart snapshots={results.snapshots} />
     </div>
   );
 }
