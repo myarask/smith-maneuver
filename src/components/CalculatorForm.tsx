@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, Fragment } from "react";
-import { FormState } from "@/global/types";
+import { Fragment } from "react";
+import { useStore } from "@/store/useStore";
 import { DEFAULTS } from "@/global/constants";
+import { FormState } from "@/global/types";
 
 const STEPS = [
   { title: "The Smith Maneuver" },
@@ -29,15 +30,8 @@ const SCENARIOS = [
   },
 ];
 
-export default function CalculatorForm({
-  form,
-  onChange,
-}: {
-  form: FormState;
-  onChange: (key: keyof FormState, value: string) => void;
-  interestRateHint?: string;
-}) {
-  const [step, setStep] = useState(0);
+export default function CalculatorForm() {
+  const { form, step, setField, setStep } = useStore();
 
   function field(
     key: keyof FormState,
@@ -65,7 +59,7 @@ export default function CalculatorForm({
             min="0"
             placeholder={placeholder}
             value={form[key]}
-            onChange={(e) => onChange(key, e.target.value)}
+            onChange={(e) => setField(key, e.target.value)}
             className="flex-1 py-2 px-3 bg-transparent text-zinc-900 dark:text-zinc-50 outline-none text-sm"
           />
           {suffix && (
@@ -116,7 +110,7 @@ export default function CalculatorForm({
                 <button
                   key={scenario.label}
                   type="button"
-                  onClick={() => onChange("investmentReturn", scenario.return)}
+                  onClick={() => setField("investmentReturn", scenario.return)}
                   className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-left transition-colors ${
                     selected
                       ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800"
@@ -165,7 +159,7 @@ export default function CalculatorForm({
                       placeholder="—"
                       value={isCustom ? form.investmentReturn : ""}
                       onChange={(e) =>
-                        onChange("investmentReturn", e.target.value)
+                        setField("investmentReturn", e.target.value)
                       }
                       className="w-14 py-1 px-2 rounded border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-sm font-mono text-right outline-none focus:ring-1 focus:ring-zinc-500 text-zinc-900 dark:text-zinc-50"
                     />
