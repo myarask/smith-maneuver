@@ -9,4 +9,5 @@ export const DEFAULTS: FormState = {
   investmentReturn: "8.0",
   marginalTaxRate: "43.0",
   readvancable: false,
+  amortizationYears: "30",
 };

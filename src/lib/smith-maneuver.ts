@@ -41,22 +41,31 @@ export function getSimulationResults({
 
   const monthlyRate = interestRate / 12;
   const monthlyReturn = investmentReturn / 12;
+  const totalMonths = years * 12;
 
   const initialDraw = readvancable
     ? helocCap
-    : helocCap / Math.pow(1 + monthlyRate, years * 12);
+    : helocCap / Math.pow(1 + monthlyRate, totalMonths);
 
   let helocBalance = initialDraw;
   let marginBalance = initialDraw;
+  let mortgageBal = mortgageBalance;
   let cashPile = 0;
   let yearlyRefundAccum = 0;
   let cumulativeHelocRefund = 0;
+
+  // Monthly payment for Rempel Maximum (standard amortization formula)
+  const monthlyMortgagePayment =
+    readvancable && helocCap > 0 && mortgageBalance > 0
+      ? (mortgageBalance * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
+        (Math.pow(1 + monthlyRate, totalMonths) - 1)
+      : 0;
 
   const snapshots: Snapshot[] = [
     {
       month: 0,
       homeValue,
-      mortgageBalance,
+      mortgageBalance: mortgageBal,
       helocBalance,
       marginBalance,
       cashPile,
@@ -65,7 +74,19 @@ export function getSimulationResults({
     },
   ];
 
-  for (let m = 1; m <= years * 12; m++) {
+  for (let m = 1; m <= totalMonths; m++) {
+    if (readvancable && mortgageBal > 0) {
+      // Rempel Maximum: re-borrow each month's principal payment and invest it
+      const mortgageInterest = mortgageBal * monthlyRate;
+      const principalPaid = Math.min(
+        monthlyMortgagePayment - mortgageInterest,
+        mortgageBal,
+      );
+      mortgageBal = Math.max(mortgageBal - principalPaid, 0);
+      helocBalance += principalPaid;
+      marginBalance += principalPaid;
+    }
+
     const helocInterest = helocBalance * monthlyRate;
     helocBalance += helocInterest;
 
@@ -77,16 +98,25 @@ export function getSimulationResults({
 
     // Assume the tax refund is received in May
     if ((m + MONTHS_UNTIL_MAY) % 12 === 0) {
-      cashPile += yearlyRefundAccum;
+      if (readvancable && mortgageBal > 0) {
+        // Rempel Maximum: recycle refund into mortgage, re-borrow and invest
+        const lumpToMortgage = Math.min(yearlyRefundAccum, mortgageBal);
+        mortgageBal = Math.max(mortgageBal - lumpToMortgage, 0);
+        helocBalance += lumpToMortgage;
+        marginBalance += lumpToMortgage;
+        cashPile += yearlyRefundAccum - lumpToMortgage;
+      } else {
+        cashPile += yearlyRefundAccum;
+      }
       yearlyRefundAccum = 0;
     }
 
     snapshots.push({
       month: m,
       homeValue,
-      mortgageBalance,
+      mortgageBalance: readvancable ? mortgageBal : mortgageBalance,
       helocBalance,
-      marginBalance: marginBalance,
+      marginBalance,
       cashPile,
       netEquity: marginBalance + cashPile - helocBalance,
       cumulativeHelocRefund,

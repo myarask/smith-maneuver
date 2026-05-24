@@ -32,7 +32,6 @@ function formatDollars(n: number) {
 
 const START_YEAR = new Date().getFullYear();
 const START_MONTH = new Date().getMonth();
-const YEAR_TICKS = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120];
 
 function formatTick(month: number) {
   const d = new Date(START_YEAR, START_MONTH + month);
@@ -54,6 +53,12 @@ export function Chart() {
 
   if (!results) return null;
 
+  const totalMonths = results.snapshots.length - 1;
+  const yearTicks = Array.from(
+    { length: Math.floor(totalMonths / 12) + 1 },
+    (_, i) => i * 12,
+  );
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart
@@ -67,7 +72,7 @@ export function Chart() {
         />
         <XAxis
           dataKey="month"
-          ticks={YEAR_TICKS}
+          ticks={yearTicks}
           tickFormatter={formatTick}
           tick={{ fontSize: 11, fill: "#71717a" }}
           axisLine={false}
