@@ -9,6 +9,7 @@ import {
   handleNext,
   handleJump,
   setReadvancable,
+  setUseRrsp,
 } from "@/global/store";
 import { DEFAULTS } from "@/global/constants";
 import { Field } from "./Field";
@@ -376,6 +377,30 @@ export function Form() {
               Rempel Maximum strategy.
             </p>
           )}
+          <button
+            type="button"
+            onClick={() => setUseRrsp(!form.useRrsp)}
+            className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-left transition-colors ${
+              form.useRrsp
+                ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800"
+                : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-zinc-400 dark:hover:border-zinc-500"
+            }`}
+          >
+            <div className="flex flex-col gap-0.5">
+              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                Put refunds into RRSP first
+              </span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                Earn a second tax refund on your RRSP contribution
+              </span>
+            </div>
+            <input
+              type="checkbox"
+              checked={form.useRrsp}
+              onChange={(e) => setUseRrsp(e.target.checked)}
+              className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 accent-zinc-900 dark:accent-zinc-50"
+            />
+          </button>
           <Field
             name="amortizationYears"
             label="Amortization period"

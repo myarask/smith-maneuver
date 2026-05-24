@@ -110,6 +110,15 @@ export function Chart() {
           stroke="#16a34a"
           fillOpacity={0.75}
         />
+        <Area
+          type="monotone"
+          dataKey="rrspBalance"
+          stackId="equity"
+          name="RRSP"
+          fill="#3b82f6"
+          stroke="#3b82f6"
+          fillOpacity={0.75}
+        />
         <Line
           type="monotone"
           dataKey="helocBalance"

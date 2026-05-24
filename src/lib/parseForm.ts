@@ -36,5 +36,6 @@ export function parseForm(form: FormState): SimulationInputs | null {
     marginalTaxRate,
     years: amortizationYears,
     readvancable: form.readvancable,
+    useRrsp: form.useRrsp,
   };
 }

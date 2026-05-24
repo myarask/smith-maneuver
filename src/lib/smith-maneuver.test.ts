@@ -14,6 +14,7 @@ const BASE: SimulationInputs = {
   marginalTaxRate: 0.43,
   years: 10,
   readvancable: false,
+  useRrsp: false,
 };
 
 // helocCap = min(0.8*700000 - 400000, 0.65*700000) = min(160000, 455000) = 160000
@@ -319,6 +320,7 @@ describe("getSimulationResults", () => {
         "helocBalance",
         "marginBalance",
         "cashPile",
+        "rrspBalance",
         "netEquity",
         "cumulativeHelocRefund",
       ] as const;
