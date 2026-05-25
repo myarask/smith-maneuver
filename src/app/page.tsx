@@ -23,7 +23,7 @@ export default function Home() {
 
   return (
     <main className="flex h-screen bg-zinc-50 dark:bg-zinc-950">
-      <div className="w-96 flex-none flex flex-col justify-center border-r border-zinc-200 dark:border-zinc-800 p-4 overflow-y-auto">
+      <div className="w-96 flex-none flex flex-col justify-start border-r border-zinc-200 dark:border-zinc-800 p-4 overflow-y-auto">
         <Form />
       </div>
       <div className="flex-1 min-w-0 h-full">

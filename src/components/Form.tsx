@@ -37,7 +37,6 @@ const SCENARIOS = [
   },
 ];
 
-
 export function Form() {
   const { form, step } = useStore();
 
@@ -201,8 +200,8 @@ export function Form() {
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             The amount that you can borrow in a HELOC is limited by your home
-            equity. Interest on interest is tax-deductable, so we allow interest
-            to compound in the HELOC.
+            equity. Interest on interest is tax-deductable, incentivizing you to
+            allow interest to compound in the HELOC.
           </p>
           <Field
             name="homeValue"
