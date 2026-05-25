@@ -53,16 +53,13 @@ export function Chart() {
 
   if (!results) return null;
 
-  const totalMonths = results.snapshots.length - 1;
-  const yearTicks = Array.from(
-    { length: Math.floor(totalMonths / 12) + 1 },
-    (_, i) => i * 12,
-  );
+  const snapshots = results.snapshots.slice(0, 10 * 12 + 1);
+  const yearTicks = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120];
 
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart
-        data={results.snapshots}
+        data={snapshots}
         margin={{ top: 4, right: 4, left: 8, bottom: 8 }}
       >
         <CartesianGrid
