@@ -198,26 +198,31 @@ export function Form() {
             if (isNaN(rate) || isNaN(tax)) return null;
             const effective = (rate * (1 - tax / 100)).toFixed(2);
             return (
-              <div className="flex flex-col gap-1">
-                <hr className="border-t border-zinc-200 dark:border-zinc-700 my-3" />
-                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Effective interest rate
-                </label>
-                <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
-                  <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
-                    {effective}
-                  </span>
-                  <span className="text-sm text-zinc-400 dark:text-zinc-500 select-none">
-                    %
-                  </span>
+              <>
+                <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Effective interest rate
+                  </label>
+                  <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
+                    <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
+                      {effective}
+                    </span>
+                    <span className="text-sm text-zinc-400 dark:text-zinc-500 select-none">
+                      %
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                    This is your true cost to borrow after tax refunds.
+                  </p>
                 </div>
-
-                <p className="text-xs text-zinc-400 dark:text-zinc-500">
-                  This is your true cost to borrow after tax refunds.
-                </p>
-              </div>
+              </>
             );
           })()}
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Tax refunds will stream from your HELOC interest payments. Over
+            time, RRSP contributions will also generate refunds.
+          </p>
         </>
       );
     if (step === 3)
@@ -255,7 +260,7 @@ export function Form() {
               "$" + Math.round(n).toLocaleString("en-CA");
             return (
               <>
-                <hr className="border-t border-zinc-200 dark:border-zinc-700 my-3" />
+                <hr className="border-t border-zinc-200 dark:border-zinc-700" />
                 <div className="flex flex-col gap-1">
                   <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                     HELOC limit
@@ -333,7 +338,7 @@ export function Form() {
               "$" + Math.round(n).toLocaleString("en-CA");
             return (
               <>
-                <hr className="border-t border-zinc-200 dark:border-zinc-700 my-3" />
+                <hr className="border-t border-zinc-200 dark:border-zinc-700" />
                 <div className="flex flex-col gap-1">
                   <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                     Initial investment
