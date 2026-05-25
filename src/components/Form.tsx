@@ -1,13 +1,11 @@
 "use client";
 
-import { Fragment } from "react";
 import {
   useStore,
   setField,
   handleChange,
   handleBack,
   handleNext,
-  handleJump,
   setReadvancable,
 } from "@/global/store";
 import { DEFAULTS } from "@/global/constants";
@@ -39,33 +37,6 @@ const SCENARIOS = [
   },
 ];
 
-function BackButton() {
-  const { step } = useStore();
-
-  return (
-    <button
-      onClick={handleBack}
-      disabled={step === 0}
-      className="text-sm font-medium text-zinc-500 dark:text-zinc-400 disabled:opacity-0 transition-opacity"
-    >
-      ← Back
-    </button>
-  );
-}
-
-function NextButton() {
-  const { step } = useStore();
-  if (step >= STEPS.length - 1) return null;
-
-  return (
-    <button
-      onClick={handleNext}
-      className="text-sm font-medium bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 px-4 py-1.5 rounded-md"
-    >
-      {step === 0 ? "Show me" : "Next →"}
-    </button>
-  );
-}
 
 export function Form() {
   const { form, step } = useStore();
@@ -363,42 +334,25 @@ export function Form() {
 
   return (
     <div className="flex flex-col gap-5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 shadow-xl">
-      <div className="flex items-center">
-        {STEPS.map((_s, i) => (
-          <Fragment key={i}>
-            {i > 0 && (
-              <div
-                className={`flex-1 h-px ${i <= step ? "bg-zinc-400 dark:bg-zinc-600" : "bg-zinc-200 dark:bg-zinc-800"}`}
-              />
-            )}
-            <button
-              onClick={() => handleJump(i)}
-              className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-colors ${
-                i === step
-                  ? "bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900"
-                  : i < step
-                    ? "bg-zinc-400 dark:bg-zinc-500 text-white dark:text-zinc-900"
-                    : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500"
-              }`}
-            >
-              {i + 1}
-            </button>
-          </Fragment>
-        ))}
-      </div>
-
-      <div className="flex flex-col gap-0.5">
-        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
+      <div className="flex items-center gap-2">
+        <button
+          onClick={handleBack}
+          className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors ${step === 0 ? "invisible" : ""}`}
+        >
+          ←
+        </button>
+        <h3 className="flex-1 text-center text-base font-semibold text-zinc-900 dark:text-zinc-50">
           {STEPS[step].title}
         </h3>
+        <button
+          onClick={handleNext}
+          className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors ${step >= STEPS.length - 1 ? "invisible" : ""}`}
+        >
+          →
+        </button>
       </div>
 
       <div className="flex flex-col gap-4">{stepFields()}</div>
-
-      <div className="flex items-center justify-between pt-1">
-        <BackButton />
-        <NextButton />
-      </div>
     </div>
   );
 }
