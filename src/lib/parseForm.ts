@@ -7,7 +7,6 @@ export function parseForm(form: FormState): SimulationInputs | null {
   const interestRate = parseFloat(form.interestRate) / 100;
   const investmentReturn = parseFloat(form.investmentReturn) / 100;
   const marginalTaxRate = parseFloat(form.marginalTaxRate) / 100;
-  const amortizationYears = parseInt(form.amortizationYears, 10);
   if (
     isNaN(homeValue) ||
     homeValue <= 0 ||
@@ -21,9 +20,7 @@ export function parseForm(form: FormState): SimulationInputs | null {
     investmentReturn >= 1 ||
     isNaN(marginalTaxRate) ||
     marginalTaxRate <= 0 ||
-    marginalTaxRate >= 1 ||
-    isNaN(amortizationYears) ||
-    amortizationYears < 1
+    marginalTaxRate >= 1
   ) {
     return null;
   }
@@ -34,7 +31,7 @@ export function parseForm(form: FormState): SimulationInputs | null {
     interestRate,
     investmentReturn,
     marginalTaxRate,
-    years: amortizationYears,
+    years: 10,
     readvancable: form.readvancable,
   };
 }

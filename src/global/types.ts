@@ -5,5 +5,4 @@ export type FormState = {
   investmentReturn: string;
   marginalTaxRate: string;
   readvancable: boolean;
-  amortizationYears: string;
 };

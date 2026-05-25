@@ -49,23 +49,15 @@ export function getSimulationResults({
 
   let helocBalance = initialDraw;
   let marginBalance = initialDraw;
-  let mortgageBal = mortgageBalance;
   let rrspBalance = 0;
   let yearlyRefundAccum = 0;
   let cumulativeHelocRefund = 0;
-
-  // Monthly payment for Rempel Maximum (standard amortization formula)
-  const monthlyMortgagePayment =
-    readvancable && helocCap > 0 && mortgageBalance > 0
-      ? (mortgageBalance * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
-        (Math.pow(1 + monthlyRate, totalMonths) - 1)
-      : 0;
 
   const snapshots: Snapshot[] = [
     {
       month: 0,
       homeValue,
-      mortgageBalance: mortgageBal,
+      mortgageBalance,
       helocBalance,
       marginBalance,
       rrspBalance,
@@ -75,18 +67,6 @@ export function getSimulationResults({
   ];
 
   for (let m = 1; m <= totalMonths; m++) {
-    if (readvancable && mortgageBal > 0) {
-      // Rempel Maximum: re-borrow each month's principal payment and invest it
-      const mortgageInterest = mortgageBal * monthlyRate;
-      const principalPaid = Math.min(
-        monthlyMortgagePayment - mortgageInterest,
-        mortgageBal,
-      );
-      mortgageBal = Math.max(mortgageBal - principalPaid, 0);
-      helocBalance += principalPaid;
-      marginBalance += principalPaid;
-    }
-
     const helocInterest = helocBalance * monthlyRate;
     helocBalance += helocInterest;
 
@@ -106,7 +86,7 @@ export function getSimulationResults({
     snapshots.push({
       month: m,
       homeValue,
-      mortgageBalance: readvancable ? mortgageBal : mortgageBalance,
+      mortgageBalance,
       helocBalance,
       marginBalance,
       rrspBalance,

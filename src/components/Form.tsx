@@ -19,7 +19,6 @@ const STEPS = [
   { title: "Borrowing Costs" },
   { title: "Sizing" },
   { title: "Readvancable Mortgage" },
-  { title: "Rempel Maximum" },
 ];
 
 const SCENARIOS = [
@@ -248,9 +247,8 @@ export function Form() {
             const mb = parseFloat(form.mortgageBalance);
             const ir = parseFloat(form.interestRate) / 100;
             if (isNaN(hv) || isNaN(mb) || isNaN(ir)) return null;
-            const amortYears = parseInt(form.amortizationYears || "30") || 30;
             const helocCap = Math.max(Math.min(0.8 * hv - mb, 0.65 * hv), 0);
-            const initialDraw = helocCap / Math.pow(1 + ir / 12, amortYears * 12);
+            const initialDraw = helocCap / Math.pow(1 + ir / 12, 10 * 12);
             const fmt = (n: number) =>
               "$" + Math.round(n).toLocaleString("en-CA");
             return (
@@ -279,7 +277,7 @@ export function Form() {
                     </span>
                   </div>
                   <p className="text-xs text-zinc-400 dark:text-zinc-500">
-                    Leave room in the HELOC for {amortYears} years of interest.
+                    Leave room in the HELOC for 10 years of interest.
                   </p>
                 </div>
               </>
@@ -296,9 +294,9 @@ export function Form() {
             portion immediately reopens as available HELOC credit.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            This means you can invest your full HELOC limit from day one.
-            Instead of leaving room for accumulated interest, the mortgage
-            principal repayments continuously replenish the available credit.
+            With a readvancable mortgage you can invest the full HELOC cap from
+            day one, instead of leaving room for 10 years of compounding
+            interest.
           </p>
           <button
             type="button"
@@ -326,9 +324,8 @@ export function Form() {
             const mb = parseFloat(form.mortgageBalance);
             const ir = parseFloat(form.interestRate) / 100;
             if (isNaN(hv) || isNaN(mb) || isNaN(ir)) return null;
-            const amortYears = parseInt(form.amortizationYears || "30") || 30;
             const helocCap = Math.max(Math.min(0.8 * hv - mb, 0.65 * hv), 0);
-            const standardDraw = helocCap / Math.pow(1 + ir / 12, amortYears * 12);
+            const standardDraw = helocCap / Math.pow(1 + ir / 12, 10 * 12);
             const readvancableDraw = helocCap;
             const fmt = (n: number) =>
               "$" + Math.round(n).toLocaleString("en-CA");
@@ -347,68 +344,7 @@ export function Form() {
                   <p className="text-xs text-zinc-400 dark:text-zinc-500">
                     {form.readvancable
                       ? "Invest the full HELOC limit from day one."
-                      : `Leave room in the HELOC for ${amortYears} years of interest.`}
-                  </p>
-                </div>
-              </>
-            );
-          })()}
-        </>
-      );
-    if (step === 5)
-      return (
-        <>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            The Rempel Maximum accelerates the Smith Maneuver by recycling every
-            dollar of mortgage principal back into investments the moment it is
-            paid. Each month, the principal portion of your mortgage payment is
-            re-borrowed from the HELOC and immediately invested.
-          </p>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Each year your tax refund is contributed to an RRSP, where it grows
-            tax-sheltered. The RRSP contribution generates its own refund, which
-            is also contributed — and so on. The net effect is equivalent to
-            depositing your refund divided by one minus your marginal tax rate.
-          </p>
-          {!form.readvancable && (
-            <p className="text-xs text-amber-600 dark:text-amber-400">
-              Enable a readvancable mortgage in the previous step to unlock the
-              Rempel Maximum strategy.
-            </p>
-          )}
-          <Field
-            name="amortizationYears"
-            label="Amortization period"
-            value={form.amortizationYears}
-            suffix="years"
-            placeholder={DEFAULTS.amortizationYears}
-            step="1"
-          />
-          {(() => {
-            const mb = parseFloat(form.mortgageBalance);
-            const ir = parseFloat(form.interestRate) / 100;
-            const amortYears = parseInt(form.amortizationYears || "30") || 30;
-            if (isNaN(mb) || isNaN(ir) || ir <= 0) return null;
-            const r = ir / 12;
-            const n = amortYears * 12;
-            const monthlyPayment =
-              (mb * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-            const fmt = (v: number) =>
-              "$" + Math.round(v).toLocaleString("en-CA");
-            return (
-              <>
-                <hr className="border-t border-zinc-200 dark:border-zinc-700 my-3" />
-                <div className="flex flex-col gap-1">
-                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Monthly mortgage payment
-                  </label>
-                  <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
-                    <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
-                      {fmt(monthlyPayment)}
-                    </span>
-                  </div>
-                  <p className="text-xs text-zinc-400 dark:text-zinc-500">
-                    Fixed payment to retire the mortgage in {amortYears} years.
+                      : "Leave room in the HELOC for 10 years of interest."}
                   </p>
                 </div>
               </>
