@@ -94,9 +94,7 @@ export function Form() {
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            The viability of the Smith Maneuver depends on the difference
-            between your expected investment return and your borrowing cost. To
-            begin, estimate your average annual return.
+            To begin, estimate your average annual return.
           </p>
           <div className="flex flex-col gap-2">
             {SCENARIOS.map((scenario) => {
@@ -165,6 +163,10 @@ export function Form() {
               );
             })()}
           </div>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            In this simulation, tax refunds are sent to your RRSP, compounding
+            refunds and returns until retirement.
+          </p>
         </>
       );
     if (step === 2)
@@ -223,8 +225,8 @@ export function Form() {
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             The amount that you can borrow in a HELOC is limited by your home
-            equity. Borrowing an amount below the maximum allows interest to be
-            charged directly to the HELOC.
+            equity. Interest on interest is tax-deductable, so we allow interest
+            to compound in the HELOC.
           </p>
           <Field
             name="homeValue"
@@ -264,7 +266,7 @@ export function Form() {
                     </span>
                   </div>
                   <p className="text-xs text-zinc-400 dark:text-zinc-500">
-                    The most you can borrow.
+                    The maximum you could borrow.
                   </p>
                 </div>
                 <div className="flex flex-col gap-1">

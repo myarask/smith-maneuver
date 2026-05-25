@@ -7,6 +7,6 @@ export const DEFAULTS: FormState = {
   mortgageBalance: "300000",
   interestRate: "5.0",
   investmentReturn: "8.0",
-  marginalTaxRate: "43.0",
+  marginalTaxRate: "40.0",
   readvancable: false,
 };
