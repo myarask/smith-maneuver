@@ -55,67 +55,79 @@ export function Chart() {
 
   const snapshots = results.snapshots.slice(0, 10 * 12 + 1);
   const yearTicks = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120];
+  const final = snapshots[snapshots.length - 1];
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <ComposedChart
-        data={snapshots}
-        margin={{ top: 4, right: 4, left: 8, bottom: 8 }}
-      >
-        <CartesianGrid
-          strokeDasharray="3 3"
-          stroke="#d4d4d8"
-          strokeOpacity={0.5}
-        />
-        <XAxis
-          dataKey="month"
-          ticks={yearTicks}
-          tickFormatter={formatTick}
-          tick={{ fontSize: 11, fill: "#71717a" }}
-          axisLine={false}
-          tickLine={false}
-        />
-        <YAxis
-          tickFormatter={formatCompact}
-          tick={{ fontSize: 11, fill: "#71717a" }}
-          axisLine={false}
-          tickLine={false}
-          width={56}
-        />
-        <Tooltip
-          formatter={(value) =>
-            typeof value === "number" ? formatDollars(value) : String(value)
-          }
-          labelFormatter={(m) => formatMonthLabel(m as number)}
-        />
-        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-        <Area
-          type="monotone"
-          dataKey="marginBalance"
-          stackId="equity"
-          name="Margin account"
-          fill="#16a34a"
-          stroke="#16a34a"
-          fillOpacity={0.75}
-        />
-        <Area
-          type="monotone"
-          dataKey="rrspBalance"
-          stackId="equity"
-          name="RRSP"
-          fill="#3b82f6"
-          stroke="#3b82f6"
-          fillOpacity={0.75}
-        />
-        <Line
-          type="monotone"
-          dataKey="helocBalance"
-          name="HELOC balance"
-          stroke="#ef4444"
-          strokeWidth={2}
-          dot={false}
-        />
-      </ComposedChart>
-    </ResponsiveContainer>
+    <div className="relative w-full h-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <ComposedChart
+          data={snapshots}
+          margin={{ top: 4, right: 4, left: 8, bottom: 8 }}
+        >
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#d4d4d8"
+            strokeOpacity={0.5}
+          />
+          <XAxis
+            dataKey="month"
+            ticks={yearTicks}
+            tickFormatter={formatTick}
+            tick={{ fontSize: 11, fill: "#71717a" }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            tickFormatter={formatCompact}
+            tick={{ fontSize: 11, fill: "#71717a" }}
+            axisLine={false}
+            tickLine={false}
+            width={56}
+          />
+          <Tooltip
+            formatter={(value) =>
+              typeof value === "number" ? formatDollars(value) : String(value)
+            }
+            labelFormatter={(m) => formatMonthLabel(m as number)}
+          />
+          <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
+          <Area
+            type="monotone"
+            dataKey="nonRegisteredBalance"
+            stackId="equity"
+            name="Non-registered account"
+            fill="#16a34a"
+            stroke="#16a34a"
+            fillOpacity={0.75}
+          />
+          <Area
+            type="monotone"
+            dataKey="rrspBalance"
+            stackId="equity"
+            name="RRSP"
+            fill="#3b82f6"
+            stroke="#3b82f6"
+            fillOpacity={0.75}
+          />
+          <Line
+            type="monotone"
+            dataKey="helocBalance"
+            name="HELOC balance"
+            stroke="#ef4444"
+            strokeWidth={2}
+            dot={false}
+          />
+        </ComposedChart>
+      </ResponsiveContainer>
+
+      <div className="absolute top-3 left-18 flex flex-col gap-1 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-sm px-3 py-2 shadow-sm pointer-events-none">
+        <p className="text-[9px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+          10-yr net gain
+        </p>
+        <p className={`text-xl font-bold tabular-nums leading-none ${final.netEquity >= 0 ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+          {formatDollars(final.netEquity)}
+        </p>
+      </div>
+    </div>
   );
 }

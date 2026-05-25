@@ -59,9 +59,9 @@ describe("getSimulationResults", () => {
       expect(snapshots[0].helocBalance).toBeCloseTo(expected, 6);
     });
 
-    it("marginBalance equals helocBalance at month 0", () => {
+    it("nonRegisteredBalance equals helocBalance at month 0", () => {
       const { snapshots } = getSimulationResults(BASE);
-      expect(snapshots[0].marginBalance).toBe(snapshots[0].helocBalance);
+      expect(snapshots[0].nonRegisteredBalance).toBe(snapshots[0].helocBalance);
     });
 
     it("rrspBalance is 0", () => {
@@ -107,7 +107,7 @@ describe("getSimulationResults", () => {
       const { snapshots } = getSimulationResults(inputs);
       snapshots.forEach((s) => {
         expect(s.helocBalance).toBe(0);
-        expect(s.marginBalance).toBe(0);
+        expect(s.nonRegisteredBalance).toBe(0);
       });
     });
   });
@@ -145,8 +145,8 @@ describe("getSimulationResults", () => {
       const { snapshots } = getSimulationResults(BASE);
       const monthlyReturn = BASE.investmentReturn / 12;
       for (let m = 1; m <= 5; m++) {
-        expect(snapshots[m].marginBalance).toBeCloseTo(
-          snapshots[m - 1].marginBalance * (1 + monthlyReturn),
+        expect(snapshots[m].nonRegisteredBalance).toBeCloseTo(
+          snapshots[m - 1].nonRegisteredBalance * (1 + monthlyReturn),
           6,
         );
       }
@@ -222,11 +222,11 @@ describe("getSimulationResults", () => {
   });
 
   describe("net equity", () => {
-    it("equals marginBalance + rrspBalance - helocBalance on every snapshot", () => {
+    it("equals nonRegisteredBalance + rrspBalance - helocBalance on every snapshot", () => {
       const { snapshots } = getSimulationResults(BASE);
       snapshots.forEach((s) => {
         expect(s.netEquity).toBeCloseTo(
-          s.marginBalance + s.rrspBalance - s.helocBalance,
+          s.nonRegisteredBalance + s.rrspBalance - s.helocBalance,
           6,
         );
       });
@@ -278,9 +278,9 @@ describe("getSimulationResults", () => {
       snapshots.forEach((s) => expect(s.helocBalance).toBe(0));
     });
 
-    it("marginBalance is 0 throughout", () => {
+    it("nonRegisteredBalance is 0 throughout", () => {
       const { snapshots } = getSimulationResults(inputs);
-      snapshots.forEach((s) => expect(s.marginBalance).toBe(0));
+      snapshots.forEach((s) => expect(s.nonRegisteredBalance).toBe(0));
     });
 
     it("netEquity is 0 throughout", () => {
@@ -303,12 +303,12 @@ describe("getSimulationResults", () => {
       );
     });
 
-    it("readvancable has larger marginBalance at every month", () => {
+    it("readvancable has larger nonRegisteredBalance at every month", () => {
       const standard = getSimulationResults(BASE);
       const readvancable = getSimulationResults({ ...BASE, readvancable: true });
       for (let m = 0; m <= 120; m++) {
-        expect(readvancable.snapshots[m].marginBalance).toBeGreaterThan(
-          standard.snapshots[m].marginBalance,
+        expect(readvancable.snapshots[m].nonRegisteredBalance).toBeGreaterThan(
+          standard.snapshots[m].nonRegisteredBalance,
         );
       }
     });
@@ -322,7 +322,7 @@ describe("getSimulationResults", () => {
         "homeValue",
         "mortgageBalance",
         "helocBalance",
-        "marginBalance",
+        "nonRegisteredBalance",
         "rrspBalance",
         "netEquity",
         "cumulativeHelocRefund",

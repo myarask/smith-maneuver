@@ -84,9 +84,9 @@ export function Form() {
             assets, like dividend stocks and ETFs, is tax-deductible.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            By borrowing to invest, you can benefit from compounding returns of
-            both your investments and tax refunds, creating wealth at no
-            additional cost.
+            By borrowing to invest in dividend-paying assets in a non-registered
+            account, you can benefit from compounding returns of both your
+            investments and tax refunds, creating wealth at no additional cost.
           </p>
         </>
       );
