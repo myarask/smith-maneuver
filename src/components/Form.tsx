@@ -17,6 +17,7 @@ const STEPS = [
   { title: "Borrowing Costs" },
   { title: "Sizing" },
   { title: "Readvancable Mortgage" },
+  { title: "Congratulations!" },
 ];
 
 const SCENARIOS = [
@@ -327,6 +328,26 @@ export function Form() {
               </>
             );
           })()}
+        </>
+      );
+    if (step === 5)
+      return (
+        <>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            You have enriched yourself without meaningful risk or work.
+          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Fundamentally, the Smith Maneuver and other &ldquo;Buy, Borrow,
+            Die&rdquo; strategies exploit the powerful combination of the
+            Cantillon Effect and Fractional Reserve Banking. These realities
+            explain today&apos;s immense wealth inequality, as the exploit
+            scales infinitely and works globally.
+          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            The free-market solution is to adopt a better money which nullifies
+            the Cantillon effect. Doing so is profitable, and reverses a
+            concerning trend.
+          </p>
         </>
       );
   }
