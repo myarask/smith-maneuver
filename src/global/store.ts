@@ -32,6 +32,3 @@ export const handleJump = (step: number) =>
 
 export const setReadvancable = (value: boolean) =>
   useStore.setState((s) => ({ form: { ...s.form, readvancable: value } }));
-
-export const setUseRrsp = (value: boolean) =>
-  useStore.setState((s) => ({ form: { ...s.form, useRrsp: value } }));

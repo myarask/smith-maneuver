@@ -9,7 +9,6 @@ import {
   handleNext,
   handleJump,
   setReadvancable,
-  setUseRrsp,
 } from "@/global/store";
 import { DEFAULTS } from "@/global/constants";
 import { Field } from "./Field";
@@ -366,10 +365,10 @@ export function Form() {
             re-borrowed from the HELOC and immediately invested.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Each year your tax refund is applied directly to the mortgage
-            principal, freeing an equal amount of HELOC room that is also
-            re-borrowed and invested. The mortgage is converted to
-            tax-deductible investment debt as fast as mathematically possible.
+            Each year your tax refund is contributed to an RRSP, where it grows
+            tax-sheltered. The RRSP contribution generates its own refund, which
+            is also contributed — and so on. The net effect is equivalent to
+            depositing your refund divided by one minus your marginal tax rate.
           </p>
           {!form.readvancable && (
             <p className="text-xs text-amber-600 dark:text-amber-400">
@@ -377,30 +376,6 @@ export function Form() {
               Rempel Maximum strategy.
             </p>
           )}
-          <button
-            type="button"
-            onClick={() => setUseRrsp(!form.useRrsp)}
-            className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-left transition-colors ${
-              form.useRrsp
-                ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800"
-                : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-zinc-400 dark:hover:border-zinc-500"
-            }`}
-          >
-            <div className="flex flex-col gap-0.5">
-              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                Put refunds into RRSP first
-              </span>
-              <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                Earn a second tax refund on your RRSP contribution
-              </span>
-            </div>
-            <input
-              type="checkbox"
-              checked={form.useRrsp}
-              onChange={(e) => setUseRrsp(e.target.checked)}
-              className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 accent-zinc-900 dark:accent-zinc-50"
-            />
-          </button>
           <Field
             name="amortizationYears"
             label="Amortization period"

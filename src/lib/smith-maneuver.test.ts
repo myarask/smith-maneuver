@@ -14,7 +14,6 @@ const BASE: SimulationInputs = {
   marginalTaxRate: 0.43,
   years: 10,
   readvancable: false,
-  useRrsp: false,
 };
 
 // helocCap = min(0.8*700000 - 400000, 0.65*700000) = min(160000, 455000) = 160000
@@ -65,8 +64,8 @@ describe("getSimulationResults", () => {
       expect(snapshots[0].marginBalance).toBe(snapshots[0].helocBalance);
     });
 
-    it("cashPile is 0", () => {
-      expect(getSimulationResults(BASE).snapshots[0].cashPile).toBe(0);
+    it("rrspBalance is 0", () => {
+      expect(getSimulationResults(BASE).snapshots[0].rrspBalance).toBe(0);
     });
 
     it("netEquity is 0", () => {
@@ -155,39 +154,44 @@ describe("getSimulationResults", () => {
   });
 
   describe("tax refund timing (MONTHS_UNTIL_MAY=12 → fires at m=12,24,...)", () => {
-    it("cashPile is 0 on months 1–11", () => {
+    it("rrspBalance is 0 on months 1–11", () => {
       const { snapshots } = getSimulationResults(BASE);
       for (let m = 1; m <= 11; m++) {
-        expect(snapshots[m].cashPile).toBe(0);
+        expect(snapshots[m].rrspBalance).toBe(0);
       }
     });
 
-    it("cashPile increases at month 12", () => {
+    it("rrspBalance increases at month 12", () => {
       const { snapshots } = getSimulationResults(BASE);
-      expect(snapshots[12].cashPile).toBeGreaterThan(0);
+      expect(snapshots[12].rrspBalance).toBeGreaterThan(0);
     });
 
-    it("cashPile is stable between annual payouts (months 13–23)", () => {
+    it("rrspBalance is stable between annual payouts (months 13–23)", () => {
       const { snapshots } = getSimulationResults(BASE);
+      const monthlyReturn = BASE.investmentReturn / 12;
       for (let m = 13; m <= 23; m++) {
-        expect(snapshots[m].cashPile).toBe(snapshots[12].cashPile);
+        expect(snapshots[m].rrspBalance).toBeCloseTo(
+          snapshots[m - 1].rrspBalance * (1 + monthlyReturn),
+          6,
+        );
       }
     });
 
-    it("cashPile increases on exactly 10 months over a 10-year run", () => {
+    it("rrspBalance increases on exactly 10 months over a 10-year run", () => {
       const { snapshots } = getSimulationResults(BASE);
       let increases = 0;
       for (let m = 1; m < snapshots.length; m++) {
-        if (snapshots[m].cashPile > snapshots[m - 1].cashPile) increases++;
+        if (snapshots[m].rrspBalance > snapshots[m - 1].rrspBalance * (1 + BASE.investmentReturn / 12) + 1e-9)
+          increases++;
       }
       expect(increases).toBe(10);
     });
 
-    it("cashPile never decreases", () => {
+    it("rrspBalance never decreases", () => {
       const { snapshots } = getSimulationResults(BASE);
       for (let m = 1; m < snapshots.length; m++) {
-        expect(snapshots[m].cashPile).toBeGreaterThanOrEqual(
-          snapshots[m - 1].cashPile,
+        expect(snapshots[m].rrspBalance).toBeGreaterThanOrEqual(
+          snapshots[m - 1].rrspBalance,
         );
       }
     });
@@ -218,11 +222,11 @@ describe("getSimulationResults", () => {
   });
 
   describe("net equity", () => {
-    it("equals marginBalance + cashPile - helocBalance on every snapshot", () => {
+    it("equals marginBalance + rrspBalance - helocBalance on every snapshot", () => {
       const { snapshots } = getSimulationResults(BASE);
       snapshots.forEach((s) => {
         expect(s.netEquity).toBeCloseTo(
-          s.marginBalance + s.cashPile - s.helocBalance,
+          s.marginBalance + s.rrspBalance - s.helocBalance,
           6,
         );
       });
@@ -242,9 +246,9 @@ describe("getSimulationResults", () => {
   describe("zero marginal tax rate", () => {
     const inputs: SimulationInputs = { ...BASE, marginalTaxRate: 0 };
 
-    it("cashPile is always 0", () => {
+    it("rrspBalance is always 0", () => {
       const { snapshots } = getSimulationResults(inputs);
-      snapshots.forEach((s) => expect(s.cashPile).toBe(0));
+      snapshots.forEach((s) => expect(s.rrspBalance).toBe(0));
     });
 
     it("cumulativeHelocRefund is always 0", () => {
@@ -319,7 +323,6 @@ describe("getSimulationResults", () => {
         "mortgageBalance",
         "helocBalance",
         "marginBalance",
-        "cashPile",
         "rrspBalance",
         "netEquity",
         "cumulativeHelocRefund",

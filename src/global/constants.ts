@@ -10,5 +10,4 @@ export const DEFAULTS: FormState = {
   marginalTaxRate: "43.0",
   readvancable: false,
   amortizationYears: "30",
-  useRrsp: false,
 };

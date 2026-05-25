@@ -6,7 +6,6 @@ export type SimulationInputs = {
   marginalTaxRate: number;
   years: number;
   readvancable: boolean;
-  useRrsp: boolean;
 };
 
 export type Snapshot = {
@@ -15,7 +14,6 @@ export type Snapshot = {
   mortgageBalance: number;
   helocBalance: number;
   marginBalance: number;
-  cashPile: number;
   rrspBalance: number;
   netEquity: number;
   cumulativeHelocRefund: number;
@@ -35,7 +33,6 @@ export function getSimulationResults({
   marginalTaxRate,
   years,
   readvancable,
-  useRrsp,
 }: SimulationInputs): SimulationResults {
   const helocCap = Math.max(
     Math.min(0.8 * homeValue - mortgageBalance, 0.65 * homeValue),
@@ -53,7 +50,6 @@ export function getSimulationResults({
   let helocBalance = initialDraw;
   let marginBalance = initialDraw;
   let mortgageBal = mortgageBalance;
-  let cashPile = 0;
   let rrspBalance = 0;
   let yearlyRefundAccum = 0;
   let cumulativeHelocRefund = 0;
@@ -72,7 +68,6 @@ export function getSimulationResults({
       mortgageBalance: mortgageBal,
       helocBalance,
       marginBalance,
-      cashPile,
       rrspBalance,
       netEquity: 0,
       cumulativeHelocRefund,
@@ -102,25 +97,9 @@ export function getSimulationResults({
     yearlyRefundAccum += helocInterestRefund;
     cumulativeHelocRefund += helocInterestRefund;
 
-    // Assume the tax refund is received in May
+    // Tax refund received in May: full cascade of RRSP contributions (geometric series)
     if ((m + MONTHS_UNTIL_MAY) % 12 === 0) {
-      let secondaryAmount: number;
-      if (useRrsp) {
-        rrspBalance += yearlyRefundAccum;
-        secondaryAmount = yearlyRefundAccum * marginalTaxRate;
-      } else {
-        secondaryAmount = yearlyRefundAccum;
-      }
-
-      if (readvancable && mortgageBal > 0) {
-        const lumpToMortgage = Math.min(secondaryAmount, mortgageBal);
-        mortgageBal = Math.max(mortgageBal - lumpToMortgage, 0);
-        helocBalance += lumpToMortgage;
-        marginBalance += lumpToMortgage;
-        cashPile += secondaryAmount - lumpToMortgage;
-      } else {
-        cashPile += secondaryAmount;
-      }
+      rrspBalance += yearlyRefundAccum / (1 - marginalTaxRate);
       yearlyRefundAccum = 0;
     }
 
@@ -130,9 +109,8 @@ export function getSimulationResults({
       mortgageBalance: readvancable ? mortgageBal : mortgageBalance,
       helocBalance,
       marginBalance,
-      cashPile,
       rrspBalance,
-      netEquity: marginBalance + cashPile + rrspBalance - helocBalance,
+      netEquity: marginBalance + rrspBalance - helocBalance,
       cumulativeHelocRefund,
     });
   }

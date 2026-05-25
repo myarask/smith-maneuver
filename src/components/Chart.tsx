@@ -90,15 +90,6 @@ export function Chart() {
         />
         <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
         <Area
-          type="linear"
-          dataKey="cashPile"
-          stackId="equity"
-          name="Cash refunds"
-          fill="#86efac"
-          stroke="#86efac"
-          fillOpacity={0.75}
-        />
-        <Area
           type="monotone"
           dataKey="marginBalance"
           stackId="equity"

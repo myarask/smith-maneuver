@@ -6,5 +6,4 @@ export type FormState = {
   marginalTaxRate: string;
   readvancable: boolean;
   amortizationYears: string;
-  useRrsp: boolean;
 };
