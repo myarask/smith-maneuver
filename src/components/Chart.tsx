@@ -93,20 +93,20 @@ export function Chart() {
           <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
           <Area
             type="monotone"
-            dataKey="nonRegisteredBalance"
-            stackId="equity"
-            name="Non-registered account"
-            fill="#16a34a"
-            stroke="#16a34a"
-            fillOpacity={0.75}
-          />
-          <Area
-            type="monotone"
             dataKey="rrspBalance"
             stackId="equity"
             name="RRSP"
             fill="#3b82f6"
             stroke="#3b82f6"
+            fillOpacity={0.75}
+          />
+          <Area
+            type="monotone"
+            dataKey="nonRegisteredBalance"
+            stackId="equity"
+            name="Non-registered account"
+            fill="#16a34a"
+            stroke="#16a34a"
             fillOpacity={0.75}
           />
           <Line
@@ -124,7 +124,9 @@ export function Chart() {
         <p className="text-[9px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
           10-yr net gain
         </p>
-        <p className={`text-xl font-bold tabular-nums leading-none ${final.netEquity >= 0 ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+        <p
+          className={`text-xl font-bold tabular-nums leading-none ${final.netEquity >= 0 ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
+        >
           {formatDollars(final.netEquity)}
         </p>
       </div>

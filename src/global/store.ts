@@ -31,4 +31,13 @@ export const handleJump = (step: number) =>
   useStore.setState({ step });
 
 export const setReadvancable = (value: boolean) =>
-  useStore.setState((s) => ({ form: { ...s.form, readvancable: value } }));
+  useStore.setState((s) => ({
+    form: {
+      ...s.form,
+      readvancable: value,
+      monthlyContributions: value ? s.form.monthlyContributions : false,
+    },
+  }));
+
+export const setMonthlyContributions = (value: boolean) =>
+  useStore.setState((s) => ({ form: { ...s.form, monthlyContributions: value } }));

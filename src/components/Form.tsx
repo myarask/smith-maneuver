@@ -7,6 +7,7 @@ import {
   handleBack,
   handleNext,
   setReadvancable,
+  setMonthlyContributions,
 } from "@/global/store";
 import { DEFAULTS } from "@/global/constants";
 import { Field } from "./Field";
@@ -163,6 +164,16 @@ export function Form() {
             placeholder={DEFAULTS.marginalTaxRate}
             hint="Your combined federal + provincial rate"
           />
+          {form.monthlyContributions && (
+            <Field
+              name="mortgageRate"
+              label="Mortgage rate"
+              value={form.mortgageRate}
+              suffix="%"
+              placeholder={DEFAULTS.mortgageRate}
+              hint="Your mortgage's fixed or variable rate"
+            />
+          )}
           {(() => {
             const rate = parseFloat(form.interestRate);
             const tax = parseFloat(form.marginalTaxRate);
@@ -202,7 +213,7 @@ export function Form() {
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             The amount that you can borrow in a HELOC is limited by your home
             equity. Interest on interest is tax-deductable, incentivizing you to
-            allow interest to compound in the HELOC.
+            allow your debt to compound.
           </p>
           <Field
             name="homeValue"
@@ -305,6 +316,8 @@ export function Form() {
             const helocCap = Math.max(Math.min(0.8 * hv - mb, 0.65 * hv), 0);
             const standardDraw = helocCap / Math.pow(1 + ir / 12, 10 * 12);
             const readvancableDraw = helocCap;
+            const bufferedDraw = helocCap / Math.pow(1 + ir / 12, 2);
+            const showBuffered = form.readvancable && form.monthlyContributions;
             const fmt = (n: number) =>
               "$" + Math.round(n).toLocaleString("en-CA");
             return (
@@ -316,15 +329,67 @@ export function Form() {
                   </label>
                   <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
                     <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
-                      {fmt(form.readvancable ? readvancableDraw : standardDraw)}
+                      {fmt(showBuffered ? bufferedDraw : form.readvancable ? readvancableDraw : standardDraw)}
                     </span>
                   </div>
                   <p className="text-xs text-zinc-400 dark:text-zinc-500">
-                    {form.readvancable
-                      ? "Invest the full HELOC limit from day one."
-                      : "Leave room in the HELOC for 10 years of interest."}
+                    {showBuffered
+                      ? "Leave room in the HELOC for two months of interest."
+                      : form.readvancable
+                        ? "Invest the full HELOC limit from day one."
+                        : "Leave room in the HELOC for 10 years of interest."}
                   </p>
                 </div>
+              </>
+            );
+          })()}
+          <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+          <button
+            type="button"
+            onClick={() => {
+              if (form.readvancable)
+                setMonthlyContributions(!form.monthlyContributions);
+            }}
+            className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-left transition-colors ${
+              !form.readvancable
+                ? "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 opacity-50 cursor-not-allowed"
+                : form.monthlyContributions
+                  ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800 cursor-pointer"
+                  : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-zinc-400 dark:hover:border-zinc-500 cursor-pointer"
+            }`}
+          >
+            <div className="flex flex-col gap-0.5">
+              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                Monthly RRSP contributions
+              </span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                {!form.readvancable
+                  ? "Requires a readvancable mortgage."
+                  : "Re-borrow each month's mortgage principal and contribute it to your RRSP."}
+              </span>
+            </div>
+            <input
+              type="checkbox"
+              checked={form.monthlyContributions}
+              disabled={!form.readvancable}
+              onChange={(e) => setMonthlyContributions(e.target.checked)}
+              onClick={(e) => e.stopPropagation()}
+              className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 accent-zinc-900 dark:accent-zinc-50"
+            />
+          </button>
+          {(() => {
+            if (!form.readvancable || !form.monthlyContributions) return null;
+
+            return (
+              <>
+                <Field
+                  name="amortizationYears"
+                  label="Amortization period"
+                  value={form.amortizationYears}
+                  suffix="years"
+                  step="1"
+                  placeholder={DEFAULTS.amortizationYears}
+                />
               </>
             );
           })()}

@@ -7,6 +7,9 @@ export function parseForm(form: FormState): SimulationInputs | null {
   const interestRate = parseFloat(form.interestRate) / 100;
   const investmentReturn = parseFloat(form.investmentReturn) / 100;
   const marginalTaxRate = parseFloat(form.marginalTaxRate) / 100;
+  const mortgageRate = parseFloat(form.mortgageRate) / 100;
+  const amortizationYears = parseInt(form.amortizationYears, 10);
+
   if (
     isNaN(homeValue) ||
     homeValue <= 0 ||
@@ -25,6 +28,11 @@ export function parseForm(form: FormState): SimulationInputs | null {
     return null;
   }
 
+  if (form.monthlyContributions) {
+    if (isNaN(mortgageRate) || mortgageRate <= 0 || mortgageRate >= 1) return null;
+    if (isNaN(amortizationYears) || amortizationYears < 1) return null;
+  }
+
   return {
     homeValue,
     mortgageBalance,
@@ -33,5 +41,8 @@ export function parseForm(form: FormState): SimulationInputs | null {
     marginalTaxRate,
     years: 10,
     readvancable: form.readvancable,
+    monthlyContributions: form.monthlyContributions,
+    amortizationYears: isNaN(amortizationYears) ? 25 : amortizationYears,
+    mortgageRate: isNaN(mortgageRate) ? 0 : mortgageRate,
   };
 }

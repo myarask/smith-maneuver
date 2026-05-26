@@ -14,6 +14,9 @@ const BASE: SimulationInputs = {
   marginalTaxRate: 0.43,
   years: 10,
   readvancable: false,
+  monthlyContributions: false,
+  amortizationYears: 25,
+  mortgageRate: 0.045,
 };
 
 // helocCap = min(0.8*700000 - 400000, 0.65*700000) = min(160000, 455000) = 160000
@@ -311,6 +314,32 @@ describe("getSimulationResults", () => {
           standard.snapshots[m].nonRegisteredBalance,
         );
       }
+    });
+  });
+
+  describe("monthly contributions", () => {
+    it("rrspBalance at month 120 is greater with monthlyContributions than without", () => {
+      const readvancableOnly = getSimulationResults({ ...BASE, readvancable: true });
+      const withContribs = getSimulationResults({
+        ...BASE,
+        readvancable: true,
+        monthlyContributions: true,
+      });
+      expect(withContribs.snapshots[120].rrspBalance).toBeGreaterThan(
+        readvancableOnly.snapshots[120].rrspBalance,
+      );
+    });
+
+    it("helocBalance at month 120 is greater with monthlyContributions than without", () => {
+      const readvancableOnly = getSimulationResults({ ...BASE, readvancable: true });
+      const withContribs = getSimulationResults({
+        ...BASE,
+        readvancable: true,
+        monthlyContributions: true,
+      });
+      expect(withContribs.snapshots[120].helocBalance).toBeGreaterThan(
+        readvancableOnly.snapshots[120].helocBalance,
+      );
     });
   });
 
