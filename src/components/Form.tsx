@@ -14,6 +14,7 @@ import { Field } from "./Field";
 
 const STEPS = [
   { title: "The Smith Maneuver" },
+  { title: "Your Mortgage" },
   { title: "Investment Returns" },
   { title: "Borrowing Costs" },
   { title: "Sizing" },
@@ -30,12 +31,12 @@ const SCENARIOS = [
   {
     label: "Average",
     description: "Typical diversified portfolio",
-    return: "8.0",
+    return: "9.0",
   },
   {
     label: "Underperform",
     description: "Below-market or weak conditions",
-    return: "5.0",
+    return: "6.0",
   },
 ];
 
@@ -63,6 +64,30 @@ export function Form() {
         </>
       );
     if (step === 1)
+      return (
+        <>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Enter the details of your current mortgage. These are used to
+            calculate your monthly principal payments and HELOC availability.
+          </p>
+          <Field
+            name="mortgageRate"
+            label="Mortgage interest rate"
+            value={form.mortgageRate}
+            suffix="%"
+            placeholder={DEFAULTS.mortgageRate}
+          />
+          <Field
+            name="amortizationYears"
+            label="Amortization period"
+            value={form.amortizationYears}
+            suffix="years"
+            step="1"
+            placeholder={DEFAULTS.amortizationYears}
+          />
+        </>
+      );
+    if (step === 2)
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
@@ -141,7 +166,7 @@ export function Form() {
           </p>
         </>
       );
-    if (step === 2)
+    if (step === 3)
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
@@ -150,11 +175,10 @@ export function Form() {
           </p>
           <Field
             name="interestRate"
-            label="Interest rate"
+            label="HELOC interest rate"
             value={form.interestRate}
             suffix="%"
             placeholder={DEFAULTS.interestRate}
-            hint={`Market HELOC variable interest rate: ${form.interestRate}%`}
           />
           <Field
             name="marginalTaxRate"
@@ -162,18 +186,9 @@ export function Form() {
             value={form.marginalTaxRate}
             suffix="%"
             placeholder={DEFAULTS.marginalTaxRate}
-            hint="Your combined federal + provincial rate"
+            hint="Your combined federal + provincial tax rate"
           />
-          {form.monthlyContributions && (
-            <Field
-              name="mortgageRate"
-              label="Mortgage rate"
-              value={form.mortgageRate}
-              suffix="%"
-              placeholder={DEFAULTS.mortgageRate}
-              hint="Your mortgage's fixed or variable rate"
-            />
-          )}
+
           {(() => {
             const rate = parseFloat(form.interestRate);
             const tax = parseFloat(form.marginalTaxRate);
@@ -207,7 +222,7 @@ export function Form() {
           </p>
         </>
       );
-    if (step === 3)
+    if (step === 4)
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
@@ -274,7 +289,7 @@ export function Form() {
           })()}
         </>
       );
-    if (step === 4)
+    if (step === 5)
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
@@ -362,7 +377,13 @@ export function Form() {
                   </label>
                   <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
                     <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
-                      {fmt(showBuffered ? bufferedDraw : form.readvancable ? readvancableDraw : standardDraw)}
+                      {fmt(
+                        showBuffered
+                          ? bufferedDraw
+                          : form.readvancable
+                            ? readvancableDraw
+                            : standardDraw,
+                      )}
                     </span>
                   </div>
                   <p className="text-xs text-zinc-400 dark:text-zinc-500">
@@ -376,41 +397,33 @@ export function Form() {
               </>
             );
           })()}
-          {(() => {
-            if (!form.readvancable || !form.monthlyContributions) return null;
-
-            return (
-              <>
-                <Field
-                  name="amortizationYears"
-                  label="Amortization period"
-                  value={form.amortizationYears}
-                  suffix="years"
-                  step="1"
-                  placeholder={DEFAULTS.amortizationYears}
-                />
-              </>
-            );
-          })()}
         </>
       );
-    if (step === 5)
+    if (step === 6)
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            You have enriched yourself without meaningful risk or work.
+            You have enriched yourself without meaningful risk or work. The
+            smith maneuver will continue to be a cash-flow-neutral benefit until
+            your HELOC limit is reached.
+          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            At that point, you are free to sell your home tax-free and pay off
+            the HELOC. Retire into the sunset with your gains, or buy a bigger
+            house and do it again.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Fundamentally, the Smith Maneuver and other &ldquo;Buy, Borrow,
             Die&rdquo; strategies exploit the powerful combination of the
-            Cantillon Effect and Fractional Reserve Banking. These realities
-            explain today&apos;s immense wealth inequality, as the exploit
-            scales infinitely and works globally.
+            Cantillon Effect and Fractional Reserve Banking.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            The free-market solution is to adopt a better money which nullifies
-            the Cantillon effect. Doing so is profitable, and reverses a
-            concerning trend.
+            <b>Cantillon Effect</b>: New money disproportionately benefits the
+            first to spend it.
+          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            <b>Fractional Reserve Banking</b>: New money is created when banks
+            make loans.
           </p>
         </>
       );
