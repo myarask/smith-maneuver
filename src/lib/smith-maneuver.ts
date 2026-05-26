@@ -60,7 +60,6 @@ export function getSimulationResults({
   let nonRegisteredBalance = initialDraw;
   let rrspBalance = 0;
   let yearlyRefundAccum = 0;
-  let yearlyPrincipalAccum = 0;
   let cumulativeHelocRefund = 0;
 
   const monthlyMortgageRate = mortgageRate / 12;
@@ -76,7 +75,7 @@ export function getSimulationResults({
     {
       month: 0,
       homeValue,
-      mortgageBalance,
+      mortgageBalance: mortgageBal,
       helocBalance,
       nonRegisteredBalance,
       rrspBalance,
@@ -85,18 +84,22 @@ export function getSimulationResults({
     },
   ];
 
+  const heloc65Cap = 0.65 * homeValue;
+
   for (let m = 1; m <= totalMonths; m++) {
     if (monthlyContributions && mortgageBal > 0) {
       const mortgageInterest = mortgageBal * monthlyMortgageRate;
       const principalPaid = Math.min(monthlyMortgagePayment - mortgageInterest, mortgageBal);
       mortgageBal = Math.max(mortgageBal - principalPaid, 0);
-      const reborrow = principalPaid;
+      const maxReborrow = Math.max(0, heloc65Cap - helocBalance);
+      const reborrow = Math.min(principalPaid, maxReborrow);
       helocBalance += reborrow;
-      yearlyPrincipalAccum += reborrow;
+      nonRegisteredBalance += reborrow;
     }
 
     const helocInterest = helocBalance * monthlyRate;
-    helocBalance += helocInterest;
+    const capitalized = Math.min(helocInterest, Math.max(0, heloc65Cap - helocBalance));
+    helocBalance += capitalized;
 
     nonRegisteredBalance = nonRegisteredBalance * (1 + monthlyReturn);
     rrspBalance = rrspBalance * (1 + monthlyReturn);
@@ -105,18 +108,15 @@ export function getSimulationResults({
     yearlyRefundAccum += helocInterestRefund;
     cumulativeHelocRefund += helocInterestRefund;
 
-    // Tax refund received in May: cascade both HELOC interest refund and monthly principal contributions
     if ((m + MONTHS_UNTIL_MAY) % 12 === 0) {
       rrspBalance += yearlyRefundAccum / (1 - marginalTaxRate);
-      rrspBalance += yearlyPrincipalAccum / (1 - marginalTaxRate);
       yearlyRefundAccum = 0;
-      yearlyPrincipalAccum = 0;
     }
 
     snapshots.push({
       month: m,
       homeValue,
-      mortgageBalance,
+      mortgageBalance: mortgageBal,
       helocBalance,
       nonRegisteredBalance,
       rrspBalance,

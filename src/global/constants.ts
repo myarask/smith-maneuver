@@ -1,6 +1,6 @@
 import type { FormState } from "./types";
 
-export const MONTHS_UNTIL_MAY = 12 - new Date().getMonth() + 4;
+export const MONTHS_UNTIL_MAY = (new Date().getMonth() - 4 + 12) % 12 || 12;
 
 export const DEFAULTS: FormState = {
   homeValue: "600000",

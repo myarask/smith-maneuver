@@ -318,15 +318,15 @@ describe("getSimulationResults", () => {
   });
 
   describe("monthly contributions", () => {
-    it("rrspBalance at month 120 is greater with monthlyContributions than without", () => {
+    it("nonRegisteredBalance at month 120 is greater with monthlyContributions than without", () => {
       const readvancableOnly = getSimulationResults({ ...BASE, readvancable: true });
       const withContribs = getSimulationResults({
         ...BASE,
         readvancable: true,
         monthlyContributions: true,
       });
-      expect(withContribs.snapshots[120].rrspBalance).toBeGreaterThan(
-        readvancableOnly.snapshots[120].rrspBalance,
+      expect(withContribs.snapshots[120].nonRegisteredBalance).toBeGreaterThan(
+        readvancableOnly.snapshots[120].nonRegisteredBalance,
       );
     });
 
@@ -340,6 +340,26 @@ describe("getSimulationResults", () => {
       expect(withContribs.snapshots[120].helocBalance).toBeGreaterThan(
         readvancableOnly.snapshots[120].helocBalance,
       );
+    });
+
+    it("mortgageBalance in snapshots decreases over time when monthlyContributions is true", () => {
+      const { snapshots } = getSimulationResults({
+        ...BASE,
+        readvancable: true,
+        monthlyContributions: true,
+      });
+      expect(snapshots[120].mortgageBalance).toBeLessThan(snapshots[0].mortgageBalance);
+    });
+  });
+
+  describe("65% LTV cap", () => {
+    it("helocBalance never exceeds 0.65 * homeValue on any snapshot", () => {
+      const inputs = { ...BASE, homeValue: 500_000, mortgageBalance: 1, readvancable: true };
+      const cap = 0.65 * 500_000;
+      const { snapshots } = getSimulationResults(inputs);
+      snapshots.forEach((s) => {
+        expect(s.helocBalance).toBeLessThanOrEqual(cap + 1e-6);
+      });
     });
   });
 

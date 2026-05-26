@@ -308,6 +308,39 @@ export function Form() {
               className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 accent-zinc-900 dark:accent-zinc-50"
             />
           </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (form.readvancable)
+                setMonthlyContributions(!form.monthlyContributions);
+            }}
+            className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-left transition-colors ${
+              !form.readvancable
+                ? "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 opacity-50 cursor-not-allowed"
+                : form.monthlyContributions
+                  ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800 cursor-pointer"
+                  : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-zinc-400 dark:hover:border-zinc-500 cursor-pointer"
+            }`}
+          >
+            <div className="flex flex-col gap-0.5">
+              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                Monthly contributions
+              </span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                {!form.readvancable
+                  ? "Requires a readvancable mortgage."
+                  : "Re-borrow each month's mortgage principal and invest it in your non-registered account."}
+              </span>
+            </div>
+            <input
+              type="checkbox"
+              checked={form.monthlyContributions}
+              disabled={!form.readvancable}
+              onChange={(e) => setMonthlyContributions(e.target.checked)}
+              onClick={(e) => e.stopPropagation()}
+              className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 accent-zinc-900 dark:accent-zinc-50"
+            />
+          </button>
           {(() => {
             const hv = parseFloat(form.homeValue);
             const mb = parseFloat(form.mortgageBalance);
@@ -343,40 +376,6 @@ export function Form() {
               </>
             );
           })()}
-          <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-          <button
-            type="button"
-            onClick={() => {
-              if (form.readvancable)
-                setMonthlyContributions(!form.monthlyContributions);
-            }}
-            className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-left transition-colors ${
-              !form.readvancable
-                ? "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 opacity-50 cursor-not-allowed"
-                : form.monthlyContributions
-                  ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800 cursor-pointer"
-                  : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-zinc-400 dark:hover:border-zinc-500 cursor-pointer"
-            }`}
-          >
-            <div className="flex flex-col gap-0.5">
-              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                Monthly RRSP contributions
-              </span>
-              <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                {!form.readvancable
-                  ? "Requires a readvancable mortgage."
-                  : "Re-borrow each month's mortgage principal and contribute it to your RRSP."}
-              </span>
-            </div>
-            <input
-              type="checkbox"
-              checked={form.monthlyContributions}
-              disabled={!form.readvancable}
-              onChange={(e) => setMonthlyContributions(e.target.checked)}
-              onClick={(e) => e.stopPropagation()}
-              className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 accent-zinc-900 dark:accent-zinc-50"
-            />
-          </button>
           {(() => {
             if (!form.readvancable || !form.monthlyContributions) return null;
 
