@@ -318,12 +318,13 @@ export function Form() {
                 Use a readvancable mortgage
               </span>
             </div>
-            <input
-              type="checkbox"
-              checked={form.readvancable}
-              onChange={(e) => setReadvancable(e.target.checked)}
-              className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 accent-zinc-900 dark:accent-zinc-50"
-            />
+            <div className={`h-4 w-4 shrink-0 rounded border-2 flex items-center justify-center transition-colors ${form.readvancable ? "bg-zinc-900 border-zinc-900 dark:bg-zinc-50 dark:border-zinc-50" : "border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-900"}`}>
+              {form.readvancable && (
+                <svg className="h-2.5 w-2.5 text-white dark:text-zinc-900" viewBox="0 0 10 8" fill="none">
+                  <path d="M1 4l3 3 5-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </div>
           </button>
           <button
             type="button"
@@ -349,14 +350,13 @@ export function Form() {
                   : "Re-borrow each month's mortgage principal and invest it in your non-registered account."}
               </span>
             </div>
-            <input
-              type="checkbox"
-              checked={form.monthlyContributions}
-              disabled={!form.readvancable}
-              onChange={(e) => setMonthlyContributions(e.target.checked)}
-              onClick={(e) => e.stopPropagation()}
-              className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 accent-zinc-900 dark:accent-zinc-50"
-            />
+            <div className={`h-4 w-4 shrink-0 rounded border-2 flex items-center justify-center transition-colors ${form.monthlyContributions ? "bg-zinc-900 border-zinc-900 dark:bg-zinc-50 dark:border-zinc-50" : "border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-900"}`}>
+              {form.monthlyContributions && (
+                <svg className="h-2.5 w-2.5 text-white dark:text-zinc-900" viewBox="0 0 10 8" fill="none">
+                  <path d="M1 4l3 3 5-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </div>
           </button>
           {(() => {
             const hv = parseFloat(form.homeValue);
@@ -457,13 +457,13 @@ export function Form() {
                 options premiums. Models a 20% annual return.
               </span>
             </div>
-            <input
-              type="checkbox"
-              checked={form.adoptBitcoin}
-              onChange={(e) => setAdoptBitcoin(e.target.checked)}
-              onClick={(e) => e.stopPropagation()}
-              className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 accent-zinc-900 dark:accent-zinc-50"
-            />
+            <div className={`h-4 w-4 shrink-0 rounded border-2 flex items-center justify-center transition-colors ${form.adoptBitcoin ? "bg-zinc-900 border-zinc-900 dark:bg-zinc-50 dark:border-zinc-50" : "border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-900"}`}>
+              {form.adoptBitcoin && (
+                <svg className="h-2.5 w-2.5 text-white dark:text-zinc-900" viewBox="0 0 10 8" fill="none">
+                  <path d="M1 4l3 3 5-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </div>
           </button>
         </>
       );
