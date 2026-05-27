@@ -50,18 +50,18 @@ export function Form() {
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Canadians with unused home equity can boost their savings by using a
-            combination of tax refunds and leverage. This is known as the Smith
-            Maneuver.
+            Canadians with unused home equity can put that equity to work by
+            converting non-deductible mortgage debt into a tax-deductible
+            investment loan. This is known as the Smith Maneuver.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             In Canada, the interest on a loan used to invest in income-producing
             assets, like dividend stocks and ETFs, is tax-deductible.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            By borrowing to invest in dividend-paying assets in a non-registered
-            account, you can benefit from compounding returns of both your
-            investments and tax refunds, creating wealth at no additional cost.
+            Each year, the interest you pay on the investment loan generates a
+            tax refund. Those refunds compound alongside your investments,
+            turning idle equity into growing wealth.
           </p>
         </>
       );
@@ -93,7 +93,7 @@ export function Form() {
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            To begin, estimate your average annual return.
+            Estimate your expected annual return on the invested capital.
           </p>
           <div className="flex flex-col gap-2">
             {SCENARIOS.map((scenario) => {
@@ -163,8 +163,8 @@ export function Form() {
             })()}
           </div>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            In this simulation, tax refunds are sent to your RRSP, compounding
-            refunds and returns until retirement.
+            In this simulation, tax refunds are deposited into your RRSP each
+            year, where they compound alongside your returns until retirement.
           </p>
         </>
       );
@@ -219,8 +219,9 @@ export function Form() {
             );
           })()}
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Tax refunds will stream from your HELOC interest payments. Over
-            time, RRSP contributions will also generate refunds.
+            Each year, your HELOC interest payments generate a tax refund. As
+            your RRSP grows from reinvested refunds, those contributions
+            generate refunds of their own.
           </p>
         </>
       );
@@ -229,8 +230,8 @@ export function Form() {
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             The amount that you can borrow in a HELOC is limited by your home
-            equity. Interest on interest is tax-deductable, incentivizing you to
-            allow your debt to compound.
+            equity. Allowing interest to compound means you don&rsquo;t need to
+            make cash interest payments, keeping the strategy cash-flow neutral.
           </p>
           <Field
             name="homeValue"
@@ -300,9 +301,8 @@ export function Form() {
             portion immediately reopens as available HELOC credit.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            With a readvancable mortgage you can invest the full HELOC cap from
-            day one, instead of leaving room for 10 years of compounding
-            interest.
+            With a readvancable mortgage, you can invest the full HELOC cap from
+            day one, with the option of topping up after every mortgage payment.
           </p>
           <button
             type="button"
@@ -405,9 +405,10 @@ export function Form() {
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            You have enriched yourself without meaningful risk or work. The
-            Smith Maneuver will continue to be a compounding cash-flow-neutral
-            benefit until your HELOC limit is reached.
+            You have put your equity to work. The strategy costs nothing extra
+            in monthly cash flow — your returns and tax refunds do the lifting.
+            The Smith Maneuver continues compounding until your HELOC limit is
+            reached.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Before hitting the limit, you may sell your home tax-free and pay
@@ -422,11 +423,12 @@ export function Form() {
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Fundamentally, the Smith Maneuver and other &ldquo;Buy, Borrow,
-            Die&rdquo; strategies exploit the powerful combination of the
-            Cantillon Effect and Fractional Reserve Banking.
+            Die&rdquo; strategies take advantage of the Cantillon Effect and
+            Fractional Reserve Banking.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            <b>Cantillon Effect</b>: New money benefits the first to spend it.
+            <b>Cantillon Effect</b>: New money benefits those who receive it
+            first &mdash; before it raises prices for everyone else.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             <b>Fractional Reserve Banking</b>: New money is loaned into
@@ -451,8 +453,8 @@ export function Form() {
                 Adopt Bitcoin
               </span>
               <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                Income-generating Bitcoin exposure can be achieved with BTCY.
-                Assumes a 20% annual return.
+                BTCY is a Bitcoin covered-call ETF that generates yield from
+                options premiums. Models a 20% annual return.
               </span>
             </div>
             <input
