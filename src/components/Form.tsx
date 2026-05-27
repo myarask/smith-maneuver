@@ -16,9 +16,9 @@ import { Field } from "./Field";
 const STEPS = [
   { title: "The Smith Maneuver" },
   { title: "Your Mortgage" },
+  { title: "Borrowing" },
   { title: "Investment Returns" },
   { title: "Borrowing Costs" },
-  { title: "Sizing" },
   { title: "Readvancable Mortgage" },
   { title: "Congratulations!" },
   { title: "Fundamentals" },
@@ -87,9 +87,83 @@ export function Form() {
             step="1"
             placeholder={DEFAULTS.amortizationYears}
           />
+          <Field
+            name="mortgageBalance"
+            label="Mortgage balance"
+            value={form.mortgageBalance}
+            prefix="$"
+            placeholder={DEFAULTS.mortgageBalance}
+            step="1"
+          />
         </>
       );
     if (step === 2)
+      return (
+        <>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            The amount that you can borrow in a HELOC is limited by your home
+            equity. Allowing interest to compound means you don&rsquo;t need to
+            make cash interest payments, keeping the strategy cash-flow neutral.
+          </p>
+          <Field
+            name="interestRate"
+            label="HELOC interest rate"
+            value={form.interestRate}
+            suffix="%"
+            placeholder={DEFAULTS.interestRate}
+          />
+          <Field
+            name="homeValue"
+            label="Home value"
+            value={form.homeValue}
+            prefix="$"
+            placeholder={DEFAULTS.homeValue}
+            step="1"
+          />
+          {(() => {
+            const hv = parseFloat(form.homeValue);
+            const mb = parseFloat(form.mortgageBalance);
+            const ir = parseFloat(form.interestRate) / 100;
+            if (isNaN(hv) || isNaN(mb) || isNaN(ir)) return null;
+            const helocCap = Math.max(Math.min(0.8 * hv - mb, 0.65 * hv), 0);
+            const initialDraw = helocCap / Math.pow(1 + ir / 12, 10 * 12);
+            const fmt = (n: number) =>
+              "$" + Math.round(n).toLocaleString("en-CA");
+            return (
+              <>
+                <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    HELOC limit
+                  </label>
+                  <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
+                    <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
+                      {fmt(helocCap)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                    The maximum you could borrow.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Initial investment
+                  </label>
+                  <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
+                    <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
+                      {fmt(initialDraw)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                    Leave room in the HELOC for 10 years of interest.
+                  </p>
+                </div>
+              </>
+            );
+          })()}
+        </>
+      );
+    if (step === 3)
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
@@ -168,20 +242,13 @@ export function Form() {
           </p>
         </>
       );
-    if (step === 3)
+    if (step === 4)
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Estimate your cost to borrow. Your marginal tax rate determines how
             much of the interest will be refunded to you annually.
           </p>
-          <Field
-            name="interestRate"
-            label="HELOC interest rate"
-            value={form.interestRate}
-            suffix="%"
-            placeholder={DEFAULTS.interestRate}
-          />
           <Field
             name="marginalTaxRate"
             label="Marginal tax rate"
@@ -223,73 +290,6 @@ export function Form() {
             your RRSP grows from reinvested refunds, those contributions
             generate refunds of their own.
           </p>
-        </>
-      );
-    if (step === 4)
-      return (
-        <>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            The amount that you can borrow in a HELOC is limited by your home
-            equity. Allowing interest to compound means you don&rsquo;t need to
-            make cash interest payments, keeping the strategy cash-flow neutral.
-          </p>
-          <Field
-            name="homeValue"
-            label="Home value"
-            value={form.homeValue}
-            prefix="$"
-            placeholder={DEFAULTS.homeValue}
-            step="1"
-          />
-          <Field
-            name="mortgageBalance"
-            label="Mortgage balance"
-            value={form.mortgageBalance}
-            prefix="$"
-            placeholder={DEFAULTS.mortgageBalance}
-            step="1"
-          />
-          {(() => {
-            const hv = parseFloat(form.homeValue);
-            const mb = parseFloat(form.mortgageBalance);
-            const ir = parseFloat(form.interestRate) / 100;
-            if (isNaN(hv) || isNaN(mb) || isNaN(ir)) return null;
-            const helocCap = Math.max(Math.min(0.8 * hv - mb, 0.65 * hv), 0);
-            const initialDraw = helocCap / Math.pow(1 + ir / 12, 10 * 12);
-            const fmt = (n: number) =>
-              "$" + Math.round(n).toLocaleString("en-CA");
-            return (
-              <>
-                <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-                <div className="flex flex-col gap-1">
-                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    HELOC limit
-                  </label>
-                  <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
-                    <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
-                      {fmt(helocCap)}
-                    </span>
-                  </div>
-                  <p className="text-xs text-zinc-400 dark:text-zinc-500">
-                    The maximum you could borrow.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Initial investment
-                  </label>
-                  <div className="flex items-center justify-between rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2">
-                    <span className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-50">
-                      {fmt(initialDraw)}
-                    </span>
-                  </div>
-                  <p className="text-xs text-zinc-400 dark:text-zinc-500">
-                    Leave room in the HELOC for 10 years of interest.
-                  </p>
-                </div>
-              </>
-            );
-          })()}
         </>
       );
     if (step === 5)
