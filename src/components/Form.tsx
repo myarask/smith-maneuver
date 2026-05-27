@@ -20,6 +20,7 @@ const STEPS = [
   { title: "Sizing" },
   { title: "Readvancable Mortgage" },
   { title: "Congratulations!" },
+  { title: "Fundamentals" },
 ];
 
 const SCENARIOS = [
@@ -404,26 +405,36 @@ export function Form() {
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             You have enriched yourself without meaningful risk or work. The
-            smith maneuver will continue to be a cash-flow-neutral benefit until
-            your HELOC limit is reached.
+            Smith Maneuver will continue to be a compounding cash-flow-neutral
+            benefit until your HELOC limit is reached.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            At that point, you are free to sell your home tax-free and pay off
-            the HELOC. Retire into the sunset with your gains, or buy a bigger
-            house and do it again.
+            Before hitting the limit, you may sell your home tax-free and pay
+            off the HELOC. Consider buying a more expensive property with
+            proceeds from the non-registered account and run the Smith Maneuver
+            again.
           </p>
+        </>
+      );
+    if (step === 7)
+      return (
+        <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Fundamentally, the Smith Maneuver and other &ldquo;Buy, Borrow,
             Die&rdquo; strategies exploit the powerful combination of the
             Cantillon Effect and Fractional Reserve Banking.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            <b>Cantillon Effect</b>: New money disproportionately benefits the
-            first to spend it.
+            <b>Cantillon Effect</b>: New money benefits the first to spend it.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            <b>Fractional Reserve Banking</b>: New money is created when banks
-            make loans.
+            <b>Fractional Reserve Banking</b>: New money is loaned into
+            existence.
+          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            A reliable way to protect yourself from inflation is to cause it.
+            Another solution is to adopt inflation-proof money. Currently, it is
+            possible to do both.
           </p>
         </>
       );

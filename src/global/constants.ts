@@ -8,7 +8,7 @@ export const DEFAULTS: FormState = {
   homeValue: "600000",
   mortgageBalance: "300000",
   interestRate: String(DEFAULT_HELOC_RATE),
-  investmentReturn: "8.0",
+  investmentReturn: "9.0",
   marginalTaxRate: "40.0",
   readvancable: false,
   monthlyContributions: false,
