@@ -8,6 +8,7 @@ import {
   handleNext,
   setReadvancable,
   setMonthlyContributions,
+  setAdoptBitcoin,
 } from "@/global/store";
 import { DEFAULTS } from "@/global/constants";
 import { Field } from "./Field";
@@ -436,6 +437,32 @@ export function Form() {
             Another solution is to adopt inflation-proof money. Currently, it is
             possible to do both.
           </p>
+          <button
+            type="button"
+            onClick={() => setAdoptBitcoin(!form.adoptBitcoin)}
+            className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-left transition-colors ${
+              form.adoptBitcoin
+                ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800"
+                : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-zinc-400 dark:hover:border-zinc-500"
+            }`}
+          >
+            <div className="flex flex-col gap-0.5">
+              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                Adopt Bitcoin
+              </span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                Income-generating Bitcoin exposure can be achieved with BTCY.
+                Assumes a 20% annual return.
+              </span>
+            </div>
+            <input
+              type="checkbox"
+              checked={form.adoptBitcoin}
+              onChange={(e) => setAdoptBitcoin(e.target.checked)}
+              onClick={(e) => e.stopPropagation()}
+              className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 accent-zinc-900 dark:accent-zinc-50"
+            />
+          </button>
         </>
       );
   }

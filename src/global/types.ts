@@ -6,6 +6,7 @@ export type FormState = {
   marginalTaxRate: string;
   readvancable: boolean;
   monthlyContributions: boolean;
+  adoptBitcoin: boolean;
   amortizationYears: string;
   mortgageRate: string;
 };

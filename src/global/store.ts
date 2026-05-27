@@ -41,3 +41,6 @@ export const setReadvancable = (value: boolean) =>
 
 export const setMonthlyContributions = (value: boolean) =>
   useStore.setState((s) => ({ form: { ...s.form, monthlyContributions: value } }));
+
+export const setAdoptBitcoin = (value: boolean) =>
+  useStore.setState((s) => ({ form: { ...s.form, adoptBitcoin: value } }));

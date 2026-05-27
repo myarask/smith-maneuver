@@ -12,6 +12,7 @@ export const DEFAULTS: FormState = {
   marginalTaxRate: "40.0",
   readvancable: false,
   monthlyContributions: false,
+  adoptBitcoin: false,
   amortizationYears: "25",
   mortgageRate: String(DEFAULT_HELOC_RATE - 1.5),
 };

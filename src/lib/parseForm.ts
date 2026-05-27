@@ -5,7 +5,7 @@ export function parseForm(form: FormState): SimulationInputs | null {
   const homeValue = parseFloat(form.homeValue);
   const mortgageBalance = parseFloat(form.mortgageBalance);
   const interestRate = parseFloat(form.interestRate) / 100;
-  const investmentReturn = parseFloat(form.investmentReturn) / 100;
+  const investmentReturn = form.adoptBitcoin ? 0.20 : parseFloat(form.investmentReturn) / 100;
   const marginalTaxRate = parseFloat(form.marginalTaxRate) / 100;
   const mortgageRate = parseFloat(form.mortgageRate) / 100;
   const amortizationYears = parseInt(form.amortizationYears, 10);
