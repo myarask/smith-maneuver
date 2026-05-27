@@ -24,7 +24,7 @@ const STEPS = [
 ];
 
 export function Form() {
-  const { form, step } = useStore();
+  const { form, step, primeRate } = useStore();
 
   function stepFields() {
     if (step === 0)
@@ -50,31 +50,38 @@ export function Form() {
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Enter the details of your current mortgage. These are used to
-            calculate your monthly principal payments and HELOC availability.
+            Enter your mortgage details. These determine how much principal you
+            repay each month and how much HELOC room opens up.
           </p>
           <Field
-            name="mortgageRate"
-            label="Mortgage interest rate"
-            value={form.mortgageRate}
-            suffix="%"
-            placeholder={DEFAULTS.mortgageRate}
-          />
-          <Field
-            name="amortizationYears"
-            label="Amortization period"
-            value={form.amortizationYears}
-            suffix="years"
-            step="1"
-            placeholder={DEFAULTS.amortizationYears}
-          />
-          <Field
             name="mortgageBalance"
-            label="Mortgage balance"
+            label="Balance"
             value={form.mortgageBalance}
             prefix="$"
             placeholder={DEFAULTS.mortgageBalance}
             step="1"
+            hint="How much you still owe on your mortgage"
+          />
+          <Field
+            name="mortgageRate"
+            label="Interest rate"
+            value={form.mortgageRate}
+            suffix="%"
+            placeholder={DEFAULTS.mortgageRate}
+            hint={
+              primeRate
+                ? `Prime is ${primeRate}%. Variable rates are usually Prime − 0.5%.`
+                : "Your current mortgage rate"
+            }
+          />
+          <Field
+            name="amortizationYears"
+            label="Amortization"
+            value={form.amortizationYears}
+            suffix="years"
+            step="1"
+            placeholder={DEFAULTS.amortizationYears}
+            hint="Years remaining on your mortgage"
           />
         </>
       );

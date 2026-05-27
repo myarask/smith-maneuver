@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { setField } from "@/global/store";
+import { setField, setPrimeRate } from "@/global/store";
 import { Form } from "@/components/Form";
 import { Chart } from "@/components/Chart";
 
@@ -16,6 +16,21 @@ export default function Home() {
         const rate = parseFloat(obs?.V122667806?.v);
         if (!isNaN(rate)) {
           setField("interestRate", (rate + 1).toFixed(1));
+        }
+      })
+      .catch(() => {});
+
+    fetch(
+      "https://www.bankofcanada.ca/valet/observations/V122514/json?recent=1",
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        const obs = data?.observations?.[0];
+        const overnight = parseFloat(obs?.V122514?.v);
+        if (!isNaN(overnight)) {
+          const prime = overnight + 1.45;
+          setPrimeRate(prime.toFixed(2));
+          setField("mortgageRate", (prime - 0.5).toFixed(1));
         }
       })
       .catch(() => {});

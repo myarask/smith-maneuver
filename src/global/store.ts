@@ -6,12 +6,17 @@ import { DEFAULTS } from "@/global/constants";
 interface CalculatorStore {
   form: FormState;
   step: number;
+  primeRate: string;
 }
 
 export const useStore = create<CalculatorStore>(() => ({
   form: DEFAULTS,
   step: 0,
+  primeRate: "",
 }));
+
+export const setPrimeRate = (value: string) =>
+  useStore.setState({ primeRate: value });
 
 export const setField = (key: keyof FormState, value: string) =>
   useStore.setState((s) => ({ form: { ...s.form, [key]: value } }));
