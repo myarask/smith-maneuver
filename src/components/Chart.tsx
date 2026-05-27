@@ -2,8 +2,7 @@
 
 import { useMemo } from "react";
 import {
-  ComposedChart,
-  Area,
+  LineChart,
   Line,
   XAxis,
   YAxis,
@@ -60,7 +59,7 @@ export function Chart() {
   return (
     <div className="relative w-full h-full">
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart
+        <LineChart
           data={snapshots}
           margin={{ top: 4, right: 4, left: 8, bottom: 8 }}
         >
@@ -89,25 +88,26 @@ export function Chart() {
               typeof value === "number" ? formatDollars(value) : String(value)
             }
             labelFormatter={(m) => formatMonthLabel(m as number)}
+            labelStyle={{ color: "#18181b", fontWeight: 600 }}
           />
           <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-          <Area
+          <Line
             type="monotone"
             dataKey="rrspBalance"
-            stackId="equity"
             name="RRSP"
-            fill="#3b82f6"
             stroke="#3b82f6"
-            fillOpacity={0.75}
+            strokeWidth={2}
+            strokeDasharray="4 3"
+            dot={false}
           />
-          <Area
+          <Line
             type="monotone"
             dataKey="nonRegisteredBalance"
-            stackId="equity"
-            name="Non-registered account"
-            fill="#16a34a"
-            stroke="#16a34a"
-            fillOpacity={0.75}
+            name="Non-registered"
+            stroke="#a855f7"
+            strokeWidth={2}
+            strokeDasharray="4 3"
+            dot={false}
           />
           <Line
             type="monotone"
@@ -115,9 +115,18 @@ export function Chart() {
             name="HELOC balance"
             stroke="#ef4444"
             strokeWidth={2}
+            strokeDasharray="4 3"
             dot={false}
           />
-        </ComposedChart>
+          <Line
+            type="monotone"
+            dataKey="netEquity"
+            name="Net Gain"
+            stroke="#16a34a"
+            strokeWidth={2}
+            dot={false}
+          />
+        </LineChart>
       </ResponsiveContainer>
 
       <div className="absolute top-3 left-18 flex flex-col gap-1 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-sm px-3 py-2 shadow-sm pointer-events-none">
