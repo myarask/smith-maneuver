@@ -44,5 +44,6 @@ export function parseForm(form: FormState): SimulationInputs | null {
     monthlyContributions: form.monthlyContributions,
     amortizationYears: isNaN(amortizationYears) ? 25 : amortizationYears,
     mortgageRate: isNaN(mortgageRate) ? 0 : mortgageRate,
+    reinvestRefunds: form.reinvestRefunds,
   };
 }

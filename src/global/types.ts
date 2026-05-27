@@ -9,4 +9,5 @@ export type FormState = {
   adoptBitcoin: boolean;
   amortizationYears: string;
   mortgageRate: string;
+  reinvestRefunds: boolean;
 };

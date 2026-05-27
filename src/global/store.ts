@@ -49,3 +49,6 @@ export const setMonthlyContributions = (value: boolean) =>
 
 export const setAdoptBitcoin = (value: boolean) =>
   useStore.setState((s) => ({ form: { ...s.form, adoptBitcoin: value } }));
+
+export const setReinvestRefunds = (value: boolean) =>
+  useStore.setState((s) => ({ form: { ...s.form, reinvestRefunds: value } }));

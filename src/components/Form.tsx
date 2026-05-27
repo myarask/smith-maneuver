@@ -8,6 +8,7 @@ import {
   setReadvancable,
   setMonthlyContributions,
   setAdoptBitcoin,
+  setReinvestRefunds,
 } from "@/global/store";
 import { DEFAULTS } from "@/global/constants";
 import { Field } from "./Field";
@@ -94,19 +95,19 @@ export function Form() {
             make cash interest payments, keeping the strategy cash-flow neutral.
           </p>
           <Field
-            name="interestRate"
-            label="HELOC interest rate"
-            value={form.interestRate}
-            suffix="%"
-            placeholder={DEFAULTS.interestRate}
-          />
-          <Field
             name="homeValue"
             label="Home value"
             value={form.homeValue}
             prefix="$"
             placeholder={DEFAULTS.homeValue}
             step="1"
+          />
+          <Field
+            name="interestRate"
+            label="HELOC interest rate"
+            value={form.interestRate}
+            suffix="%"
+            placeholder={DEFAULTS.interestRate}
           />
           {(() => {
             const hv = parseFloat(form.homeValue);
@@ -243,11 +244,27 @@ export function Form() {
               </>
             );
           })()}
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Each year, your HELOC interest payments generate a tax refund. As
-            your RRSP grows from reinvested refunds, those contributions
-            generate refunds of their own.
-          </p>
+          <button
+            type="button"
+            onClick={() => setReinvestRefunds(!form.reinvestRefunds)}
+            className="flex items-start gap-3 text-left"
+          >
+            <div className={`h-4 w-4 shrink-0 rounded border-2 flex items-center justify-center transition-colors mt-0.5 ${form.reinvestRefunds ? "bg-zinc-900 border-zinc-900 dark:bg-zinc-50 dark:border-zinc-50" : "border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-900"}`}>
+              {form.reinvestRefunds && (
+                <svg className="h-2.5 w-2.5 text-white dark:text-zinc-900" viewBox="0 0 10 8" fill="none">
+                  <path d="M1 4l3 3 5-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </div>
+            <div>
+              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">Re-invest tax refunds</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                {form.reinvestRefunds
+                  ? "Refunds are contributed to your RRSP, generating a further deduction."
+                  : "Refunds accumulate as cash — available for spending or emergencies."}
+              </p>
+            </div>
+          </button>
         </>
       );
     if (step === 5)

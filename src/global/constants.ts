@@ -15,4 +15,5 @@ export const DEFAULTS: FormState = {
   adoptBitcoin: false,
   amortizationYears: "25",
   mortgageRate: String(DEFAULT_HELOC_RATE - 1.5),
+  reinvestRefunds: true,
 };

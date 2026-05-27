@@ -9,6 +9,7 @@ export type SimulationInputs = {
   monthlyContributions: boolean;
   amortizationYears: number;
   mortgageRate: number;
+  reinvestRefunds: boolean;
 };
 
 export type Snapshot = {
@@ -18,6 +19,7 @@ export type Snapshot = {
   helocBalance: number;
   nonRegisteredBalance: number;
   rrspBalance: number;
+  cashPileBalance: number;
   netEquity: number;
   cumulativeHelocRefund: number;
 };
@@ -39,6 +41,7 @@ export function getSimulationResults({
   monthlyContributions,
   amortizationYears,
   mortgageRate,
+  reinvestRefunds,
 }: SimulationInputs): SimulationResults {
   const helocCap = Math.max(
     Math.min(0.8 * homeValue - mortgageBalance, 0.65 * homeValue),
@@ -59,6 +62,7 @@ export function getSimulationResults({
   let helocBalance = initialDraw;
   let nonRegisteredBalance = initialDraw;
   let rrspBalance = 0;
+  let cashPileBalance = 0;
   let yearlyRefundAccum = 0;
   let cumulativeHelocRefund = 0;
 
@@ -79,6 +83,7 @@ export function getSimulationResults({
       helocBalance,
       nonRegisteredBalance,
       rrspBalance,
+      cashPileBalance,
       netEquity: 0,
       cumulativeHelocRefund,
     },
@@ -109,7 +114,11 @@ export function getSimulationResults({
     cumulativeHelocRefund += helocInterestRefund;
 
     if ((m + MONTHS_UNTIL_MAY) % 12 === 0) {
-      rrspBalance += yearlyRefundAccum / (1 - marginalTaxRate);
+      if (reinvestRefunds) {
+        rrspBalance += yearlyRefundAccum / (1 - marginalTaxRate);
+      } else {
+        cashPileBalance += yearlyRefundAccum;
+      }
       yearlyRefundAccum = 0;
     }
 
@@ -120,7 +129,8 @@ export function getSimulationResults({
       helocBalance,
       nonRegisteredBalance,
       rrspBalance,
-      netEquity: nonRegisteredBalance + rrspBalance - helocBalance,
+      cashPileBalance,
+      netEquity: nonRegisteredBalance + rrspBalance + cashPileBalance - helocBalance,
       cumulativeHelocRefund,
     });
   }

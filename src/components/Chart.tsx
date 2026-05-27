@@ -45,6 +45,7 @@ function formatMonthLabel(month: number) {
 
 export function Chart() {
   const { form } = useStore();
+  const showCashPile = !form.reinvestRefunds;
   const results = useMemo(() => {
     const parsed = parseForm(form);
     return parsed ? getSimulationResults(parsed) : null;
@@ -118,6 +119,17 @@ export function Chart() {
             strokeDasharray="4 3"
             dot={false}
           />
+          {showCashPile && (
+            <Line
+              type="monotone"
+              dataKey="cashPileBalance"
+              name="Cash pile"
+              stroke="#f59e0b"
+              strokeWidth={2}
+              strokeDasharray="4 3"
+              dot={false}
+            />
+          )}
           <Line
             type="monotone"
             dataKey="netEquity"
