@@ -2,7 +2,6 @@
 
 import {
   useStore,
-  setField,
   handleChange,
   handleBack,
   handleNext,
@@ -16,30 +15,12 @@ import { Field } from "./Field";
 const STEPS = [
   { title: "The Smith Maneuver" },
   { title: "Your Mortgage" },
-  { title: "Borrowing" },
+  { title: "Borrowing to Invest" },
   { title: "Investment Returns" },
-  { title: "Borrowing Costs" },
+  { title: "Deploying Tax Refunds" },
   { title: "Readvancable Mortgage" },
   { title: "Congratulations!" },
   { title: "Fundamentals" },
-];
-
-const SCENARIOS = [
-  {
-    label: "Outperform",
-    description: "Beating a broad market index",
-    return: "12.0",
-  },
-  {
-    label: "Average",
-    description: "Typical diversified portfolio",
-    return: "9.0",
-  },
-  {
-    label: "Underperform",
-    description: "Below-market or weak conditions",
-    return: "6.0",
-  },
 ];
 
 export function Form() {
@@ -163,78 +144,47 @@ export function Form() {
           })()}
         </>
       );
-    if (step === 3)
+    if (step === 3) {
+      const returnVal = parseFloat(form.investmentReturn) || 9;
+      const hint =
+        returnVal <= 7
+          ? "Below-market or weak conditions"
+          : returnVal <= 11
+            ? "Typical diversified portfolio"
+            : "Beating a broad market index";
       return (
         <>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Estimate your expected annual return on the invested capital.
           </p>
           <div className="flex flex-col gap-2">
-            {SCENARIOS.map((scenario) => {
-              const selected = form.investmentReturn === scenario.return;
-              return (
-                <button
-                  key={scenario.label}
-                  type="button"
-                  onClick={() => setField("investmentReturn", scenario.return)}
-                  className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-left transition-colors ${
-                    selected
-                      ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800"
-                      : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-zinc-400 dark:hover:border-zinc-500"
-                  }`}
-                >
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                      {scenario.label}
-                    </span>
-                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                      {scenario.description}
-                    </span>
-                  </div>
-                  <span className="text-sm font-mono font-semibold text-zinc-700 dark:text-zinc-300">
-                    {scenario.return}%
-                  </span>
-                </button>
-              );
-            })}
-            {(() => {
-              const isCustom = !SCENARIOS.some(
-                (s) => s.return === form.investmentReturn,
-              );
-              return (
-                <div
-                  className={`flex items-center justify-between rounded-lg border px-3 py-2.5 transition-colors ${
-                    isCustom
-                      ? "border-zinc-900 dark:border-zinc-50 bg-zinc-50 dark:bg-zinc-800"
-                      : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900"
-                  }`}
-                >
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                      Custom
-                    </span>
-                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                      Enter your own expected return
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <input
-                      type="number"
-                      name="investmentReturn"
-                      step="0.1"
-                      min="0"
-                      placeholder="—"
-                      value={isCustom ? form.investmentReturn : ""}
-                      onChange={handleChange}
-                      className="w-14 py-1 px-2 rounded border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-sm font-mono text-right outline-none focus:ring-1 focus:ring-zinc-500 text-zinc-900 dark:text-zinc-50"
-                    />
-                    <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                      %
-                    </span>
-                  </div>
-                </div>
-              );
-            })()}
+            <div className="flex items-baseline justify-between">
+              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                Annual return
+              </label>
+              <span className="text-2xl font-bold font-mono tabular-nums text-zinc-900 dark:text-zinc-50">
+                {returnVal % 1 === 0 ? returnVal.toFixed(1) : returnVal}%
+              </span>
+            </div>
+            <input
+              type="range"
+              name="investmentReturn"
+              min="1"
+              max="20"
+              step="0.5"
+              value={returnVal}
+              onChange={handleChange}
+              className="w-full cursor-pointer accent-zinc-900 dark:accent-zinc-50"
+            />
+            <div className="flex justify-between">
+              <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                1%
+              </span>
+              <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                20%
+              </span>
+            </div>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">{hint}</p>
           </div>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             In this simulation, tax refunds are deposited into your RRSP each
@@ -242,6 +192,7 @@ export function Form() {
           </p>
         </>
       );
+    }
     if (step === 4)
       return (
         <>
@@ -318,10 +269,22 @@ export function Form() {
                 Use a readvancable mortgage
               </span>
             </div>
-            <div className={`h-4 w-4 shrink-0 rounded border-2 flex items-center justify-center transition-colors ${form.readvancable ? "bg-zinc-900 border-zinc-900 dark:bg-zinc-50 dark:border-zinc-50" : "border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-900"}`}>
+            <div
+              className={`h-4 w-4 shrink-0 rounded border-2 flex items-center justify-center transition-colors ${form.readvancable ? "bg-zinc-900 border-zinc-900 dark:bg-zinc-50 dark:border-zinc-50" : "border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-900"}`}
+            >
               {form.readvancable && (
-                <svg className="h-2.5 w-2.5 text-white dark:text-zinc-900" viewBox="0 0 10 8" fill="none">
-                  <path d="M1 4l3 3 5-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  className="h-2.5 w-2.5 text-white dark:text-zinc-900"
+                  viewBox="0 0 10 8"
+                  fill="none"
+                >
+                  <path
+                    d="M1 4l3 3 5-6"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               )}
             </div>
@@ -350,10 +313,22 @@ export function Form() {
                   : "Re-borrow each month's mortgage principal and invest it in your non-registered account."}
               </span>
             </div>
-            <div className={`h-4 w-4 shrink-0 rounded border-2 flex items-center justify-center transition-colors ${form.monthlyContributions ? "bg-zinc-900 border-zinc-900 dark:bg-zinc-50 dark:border-zinc-50" : "border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-900"}`}>
+            <div
+              className={`h-4 w-4 shrink-0 rounded border-2 flex items-center justify-center transition-colors ${form.monthlyContributions ? "bg-zinc-900 border-zinc-900 dark:bg-zinc-50 dark:border-zinc-50" : "border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-900"}`}
+            >
               {form.monthlyContributions && (
-                <svg className="h-2.5 w-2.5 text-white dark:text-zinc-900" viewBox="0 0 10 8" fill="none">
-                  <path d="M1 4l3 3 5-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  className="h-2.5 w-2.5 text-white dark:text-zinc-900"
+                  viewBox="0 0 10 8"
+                  fill="none"
+                >
+                  <path
+                    d="M1 4l3 3 5-6"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               )}
             </div>
@@ -457,10 +432,22 @@ export function Form() {
                 options premiums. Models a 20% annual return.
               </span>
             </div>
-            <div className={`h-4 w-4 shrink-0 rounded border-2 flex items-center justify-center transition-colors ${form.adoptBitcoin ? "bg-zinc-900 border-zinc-900 dark:bg-zinc-50 dark:border-zinc-50" : "border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-900"}`}>
+            <div
+              className={`h-4 w-4 shrink-0 rounded border-2 flex items-center justify-center transition-colors ${form.adoptBitcoin ? "bg-zinc-900 border-zinc-900 dark:bg-zinc-50 dark:border-zinc-50" : "border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-900"}`}
+            >
               {form.adoptBitcoin && (
-                <svg className="h-2.5 w-2.5 text-white dark:text-zinc-900" viewBox="0 0 10 8" fill="none">
-                  <path d="M1 4l3 3 5-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  className="h-2.5 w-2.5 text-white dark:text-zinc-900"
+                  viewBox="0 0 10 8"
+                  fill="none"
+                >
+                  <path
+                    d="M1 4l3 3 5-6"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               )}
             </div>
