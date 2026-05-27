@@ -53,7 +53,7 @@ export function Chart() {
   if (!results) return null;
 
   const snapshots = results.snapshots.slice(0, 10 * 12 + 1);
-  const yearTicks = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120];
+  const yearTicks = [0, 24, 48, 72, 96, 120];
   const final = snapshots[snapshots.length - 1];
 
   return (

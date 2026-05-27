@@ -22,11 +22,11 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex h-screen bg-zinc-50 dark:bg-zinc-950">
-      <div className="w-96 flex-none flex flex-col justify-start border-r border-zinc-200 dark:border-zinc-800 p-4 overflow-y-auto">
+    <main className="flex flex-col md:flex-row md:h-screen bg-zinc-50 dark:bg-zinc-950">
+      <div className="w-full md:w-96 md:flex-none flex flex-col justify-start border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800 p-4 md:overflow-y-auto">
         <Form />
       </div>
-      <div className="flex-1 min-w-0 h-full">
+      <div className="min-w-0 h-80 md:flex-1 md:h-full">
         <div className="h-full w-full">
           <Chart />
         </div>
