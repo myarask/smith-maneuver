@@ -6,12 +6,14 @@ import { DEFAULTS } from "@/global/constants";
 interface CalculatorStore {
   form: FormState;
   step: number;
+  maxStep: number;
   primeRate: string;
 }
 
 export const useStore = create<CalculatorStore>(() => ({
   form: DEFAULTS,
   step: 0,
+  maxStep: 0,
   primeRate: "",
 }));
 
@@ -27,7 +29,10 @@ export const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
   }));
 
 export const handleNext = () =>
-  useStore.setState((s) => ({ step: s.step + 1 }));
+  useStore.setState((s) => {
+    const next = s.step + 1;
+    return { step: next, maxStep: Math.max(s.maxStep, next) };
+  });
 
 export const handleBack = () =>
   useStore.setState((s) => ({ step: s.step - 1 }));

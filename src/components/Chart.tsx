@@ -44,24 +44,48 @@ function formatMonthLabel(month: number) {
 }
 
 export function Chart() {
-  const { form } = useStore();
+  const { form, maxStep } = useStore();
   const showCashPile = !form.reinvestRefunds;
   const results = useMemo(() => {
     const parsed = parseForm(form);
     return parsed ? getSimulationResults(parsed) : null;
   }, [form]);
 
-  if (!results) return null;
+  const chartData = useMemo(() => {
+    if (!results) return null;
+    const balance = parseFloat(form.mortgageBalance);
+    const rate = parseFloat(form.mortgageRate) / 100 / 12;
+    const totalMonths = parseInt(form.amortizationYears, 10) * 12;
+    const snapshots = results.snapshots.slice(0, 121);
+    const payment =
+      balance > 0 && rate > 0 && totalMonths > 0
+        ? (balance * rate * Math.pow(1 + rate, totalMonths)) /
+          (Math.pow(1 + rate, totalMonths) - 1)
+        : 0;
+    let bal = balance;
+    return snapshots.map((snap) => {
+      const mortgageBalance = Math.max(bal, 0);
+      const interest = bal * rate;
+      bal -= payment - interest;
+      return { ...snap, mortgageBalance };
+    });
+  }, [
+    form.mortgageBalance,
+    form.mortgageRate,
+    form.amortizationYears,
+    results,
+  ]);
 
-  const snapshots = results.snapshots.slice(0, 10 * 12 + 1);
+  if (!chartData) return null;
+
   const yearTicks = [0, 24, 48, 72, 96, 120];
-  const final = snapshots[snapshots.length - 1];
+  const final = chartData[chartData.length - 1];
 
   return (
     <div className="relative w-full h-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          data={snapshots}
+          data={chartData}
           margin={{ top: 4, right: 4, left: 8, bottom: 8 }}
         >
           <CartesianGrid
@@ -70,6 +94,7 @@ export function Chart() {
             strokeOpacity={0.5}
           />
           <XAxis
+            domain={[0, 120]}
             dataKey="month"
             ticks={yearTicks}
             tickFormatter={formatTick}
@@ -92,34 +117,50 @@ export function Chart() {
             labelStyle={{ color: "#18181b", fontWeight: 600 }}
           />
           <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-          <Line
-            type="monotone"
-            dataKey="rrspBalance"
-            name="RRSP"
-            stroke="#3b82f6"
-            strokeWidth={2}
-            strokeDasharray="4 3"
-            dot={false}
-          />
-          <Line
-            type="monotone"
-            dataKey="nonRegisteredBalance"
-            name="Non-registered"
-            stroke="#a855f7"
-            strokeWidth={2}
-            strokeDasharray="4 3"
-            dot={false}
-          />
-          <Line
-            type="monotone"
-            dataKey="helocBalance"
-            name="HELOC balance"
-            stroke="#ef4444"
-            strokeWidth={2}
-            strokeDasharray="4 3"
-            dot={false}
-          />
-          {showCashPile && (
+          {maxStep >= 1 && (
+            <Line
+              type="monotone"
+              dataKey="mortgageBalance"
+              name="Mortgage balance"
+              stroke="#64748b"
+              strokeWidth={2}
+              dot={false}
+            />
+          )}
+          {form.reinvestRefunds && maxStep >= 4 && (
+            <Line
+              type="monotone"
+              dataKey="rrspBalance"
+              name="RRSP"
+              stroke="#3b82f6"
+              strokeWidth={2}
+              strokeDasharray="4 3"
+              dot={false}
+            />
+          )}
+          {maxStep >= 3 && (
+            <Line
+              type="monotone"
+              dataKey="nonRegisteredBalance"
+              name="Non-registered"
+              stroke="#17831e"
+              strokeWidth={2}
+              strokeDasharray="4 3"
+              dot={false}
+            />
+          )}
+          {maxStep >= 2 && (
+            <Line
+              type="monotone"
+              dataKey="helocBalance"
+              name="HELOC balance"
+              stroke="#ef4444"
+              strokeWidth={2}
+              strokeDasharray="4 3"
+              dot={false}
+            />
+          )}
+          {showCashPile && maxStep >= 4 && (
             <Line
               type="monotone"
               dataKey="cashPileBalance"
@@ -130,14 +171,16 @@ export function Chart() {
               dot={false}
             />
           )}
-          <Line
-            type="monotone"
-            dataKey="netEquity"
-            name="Net Gain"
-            stroke="#16a34a"
-            strokeWidth={2}
-            dot={false}
-          />
+          {maxStep >= 99 && (
+            <Line
+              type="monotone"
+              dataKey="netEquity"
+              name="Net Gain"
+              stroke="#16a34a"
+              strokeWidth={2}
+              dot={false}
+            />
+          )}
         </LineChart>
       </ResponsiveContainer>
 
